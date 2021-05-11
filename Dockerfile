@@ -8,13 +8,11 @@ WORKDIR /usr/src/app
 # Install app dependencies
 COPY package.json /usr/src/app/
 RUN npm install --only=production
-RUN npm run build
-RUN npm --prefix serve install serve
 
 # Bundle app source
-COPY run.sh /use/src/app
-COPY serve/. /usr/src/app/serve
-COPY build/. /usr/src/app/build
+COPY . .
+RUN npm run build
+RUN npm --prefix serve install serve
 
 # Arguments to the docker run command
 ARG APP_PORT=5000
