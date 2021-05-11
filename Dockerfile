@@ -12,7 +12,6 @@ RUN npm install --only=production
 # Bundle app source
 COPY . .
 RUN npm run build
-RUN npm --prefix serve install serve
 
 # Arguments to the docker run command
 ARG APP_PORT=5000
