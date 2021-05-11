@@ -26,4 +26,5 @@ ${CURL}_users/org.couchdb.user:username -H "Accept: application/json" -H "Conten
 
 export REACT_APP_HOSPITALRUN_API=${DB_URL}
 
-npm run start
+ls -l
+./node_modules/serve/bin/serve.js -s build -l ${SERVICE_PORT}
