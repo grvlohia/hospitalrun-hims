@@ -14,6 +14,7 @@ echo "Node Version: $(node -v)"
 echo "Npm Version:  $(npm -v)"
 
 if [ ! -z "$COUCHDB_HOST" ]export port=${SERVICE_PORT}
+then
   echo "Couch DB URL: ${COUCHDB_HOST}"
   DB_URL="${COUCHDB_SCHM}://${COUCHDB_USER}:${COUCHDB_PASS}@${COUCHDB_HOST}:${COUCHDB_PORT}"
   echo "DB_URL: ${DB_URL}"
