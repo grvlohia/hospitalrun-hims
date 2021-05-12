@@ -13,7 +13,7 @@ echo
 echo "Node Version: $(node -v)"
 echo "Npm Version:  $(npm -v)"
 
-if [ ! -z "$COUCHDB_HOST" ]export port=${SERVICE_PORT}
+if [ ! -z "$COUCHDB_HOST" ]
 then
   echo "Couch DB URL: ${COUCHDB_HOST}"
   DB_URL="${COUCHDB_SCHM}://${COUCHDB_USER}:${COUCHDB_PASS}@${COUCHDB_HOST}:${COUCHDB_PORT}"
@@ -28,7 +28,5 @@ fi
 
 export REACT_APP_HOSPITALRUN_API=${DB_URL}
 
-ls -lR
 npm install serve
-ls -lR
 node ./node_modules/serve/bin/serve.js -s build -l ${SERVICE_PORT}
