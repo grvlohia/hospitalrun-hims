@@ -118,7 +118,7 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "commit": "npx git-cz",
     "start": "npm run translation:check && react-scripts start",
-    "build": "cross-env NODE_OPTIONS=--max-old-space-size=2048 react-scripts build",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=2048 GENERATE_SOURCEMAP=false react-scripts build",
     "update": "npx npm-check -u",
     "prepublishOnly": "npm run build",
     "test": "npm run translation:check && react-scripts test  --testPathIgnorePatterns=src/__tests__/test-utils --env=jest-environment-jsdom-sixteen",

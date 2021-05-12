@@ -11,7 +11,9 @@ RUN npm install
 
 # Bundle app source
 COPY . .
+# Build conf here: https://create-react-app.dev/docs/advanced-configuration/
 RUN npm run build
+RUN rm -rf node_modules couchdb src package.json package-lock.json .dockerignore Dockerfile nginx.conf azure.yaml scripts tsconfig.json
 
 # Arguments to the docker run command
 ARG APP_PORT=5000
