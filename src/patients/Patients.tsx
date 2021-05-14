@@ -6,7 +6,8 @@ import PrivateRoute from '../shared/components/PrivateRoute'
 import Permissions from '../shared/model/Permissions'
 import { RootState } from '../shared/store'
 import EditPatient from './edit/EditPatient'
-import NewPatient from './new/NewPatient'
+// import NewPatient from './new/NewPatient'
+import PatientType from './new/PatientType'
 import ViewPatients from './search/ViewPatients'
 import ViewPatient from './view/ViewPatient'
 
@@ -24,7 +25,7 @@ const Patients = () => {
         isAuthenticated={permissions.includes(Permissions.WritePatients)}
         exact
         path="/patients/new"
-        component={NewPatient}
+        component={PatientType}
       />
       <PrivateRoute
         isAuthenticated={

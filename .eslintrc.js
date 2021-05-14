@@ -44,7 +44,7 @@ module.exports = {
     'prettier/prettier': 'error',
     '@typescript-eslint/member-delimiter-style': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
-    "@typescript-eslint/explicit-module-boundary-types": 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
     '@typescript-eslint/unified-signatures': 'error',
@@ -76,6 +76,22 @@ module.exports = {
     ],
     curly: ['error', 'all'],
     'react/require-default-props': ['warn'],
-    'react/default-props-match-prop-types': ['warn']
+    'react/default-props-match-prop-types': ['warn'],
+    'jsx-a11y/label-has-associated-control': [
+      'error',
+      {
+        required: {
+          some: ['nesting', 'id'],
+        },
+      },
+    ],
+    'jsx-a11y/label-has-for': [
+      'error',
+      {
+        required: {
+          some: ['nesting', 'id'],
+        },
+      },
+    ],
   },
 }
