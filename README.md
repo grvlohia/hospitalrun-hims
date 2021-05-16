@@ -1,31 +1,24 @@
-# HospitalRun Frontend
+# HIMS Frontend
 
-React frontend for [HospitalRun](http://hospitalrun.io/): free software for developing world hospitals.
+# Start Couch DB
 
----
+- Install `docker` and `docker-compose`
+- Execute `./couchdb/couchdb-init.bat` on Windows or `./couchdb/couchdb-init.sh` on UNIX like systems
+- In web browser open: http://localhost:5984/_utils
 
-# Are you a user? If yes...
+# Running development build
 
-[Visit this page for general information on the HospitalRun application](https://github.com/HospitalRun/hospitalrun/blob/master/README.md) including:
+- Execute command `npm install`.
+- Execute command `npm start`. It should open web page in the web browser.
 
-- How can I deploy 1.0.0-beta?
-- Where do I report a bug or request a feature?
-- How can I contribute? (There are several other ways besides coding)
-- What is the project structure?
-- What is the application infrastructure?
-- Who is behind HospitalRun? etc.
+# Running production build
 
-# Would you like to contribute? If yes...
+- Execute command `npm install`
+- Execute command `npm run build`
+- Execute command `npm install serve`
+- Execute command `node ./node_modules/serve/bin/serve.js -s build -l 5000`
+- In web browser open http://localhost:5000
 
-[Get started by checking out the Frontend Contributing Guide](https://github.com/HospitalRun/hospitalrun-frontend/blob/master/.github/CONTRIBUTING.md) for:
-- What's the tech stack?
-- Where can I become familiar with the technologies?
-- Where do I browse issues?
-- How do I set up my local environment?
-- How do I run tests locally?
-- How do I submit my changes?
-- etc.
+# Helpful links
 
-# License
-
-Released under the [MIT license](LICENSE).
+- Build configuration details here: https://create-react-app.dev/docs/advanced-configuration/

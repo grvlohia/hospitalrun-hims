@@ -1,9 +1,9 @@
-site_name: HospitalRun
-site_url: https://hospitalrun.io
-site_description: HospitalRun project documentation
-site_author: HospitalRun Core Team
+site_name: HIMS
+site_url: https://hims.prod.innoht.live/
+site_description: Inno HIMS project documentation
+site_author: Inno HIMS Core Team
 
-repo_url: https://github.com/hospitalrun/hospitalrun-frontend/
+repo_url: https://git.innoht.live/innohealthtech/hims/
 
 theme:
   name: readthedocs
