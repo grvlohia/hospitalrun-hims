@@ -25,6 +25,7 @@ deploy_review:
     - branches
   except:
     - master
+    - main
 
 include:
   #- templates: Auto-DevOps.gitlab-ci.yml
