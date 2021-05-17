@@ -30,6 +30,16 @@ const VisitTable = ({ patientId }: Props) => {
     )
   }
 
+  patientVisits.sort((a, b) => {
+    if (a.startDateTime < b.startDateTime) {
+      return 1
+    }
+    if (a.startDateTime > b.startDateTime) {
+      return -1
+    }
+    return 0
+  })
+
   return (
     <Table
       getID={(row) => row.id}
