@@ -1,9 +1,8 @@
 {
-  "name": "@hospitalrun/frontend",
+  "name": "hims",
   "version": "2.0.0-alpha.7",
-  "description": "React frontend for HospitalRun",
+  "description": "React frontend for Inno HIMS",
   "private": false,
-  "license": "MIT",
   "dependencies": {
     "@hospitalrun/components": "~3.4.0",
     "@reduxjs/toolkit": "~1.5.0",
@@ -11,6 +10,7 @@
     "@types/json2csv": "~5.0.1",
     "@types/pouchdb-find": "~6.3.4",
     "bootstrap": "~4.6.0",
+    "cross-env": "~7.0.3",
     "date-fns": "~2.19.0",
     "escape-string-regexp": "~4.0.0",
     "i18next": "~20.1.0",
@@ -38,6 +38,7 @@
     "redux": "~4.0.5",
     "redux-thunk": "~2.3.0",
     "relational-pouch": "~4.0.0",
+    "serve": "^11.3.2",
     "shortid": "^2.2.15",
     "typescript": "~3.8.3",
     "uuid": "^8.0.0",
@@ -51,13 +52,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/HospitalRun/hospitalrun-frontend.git"
+    "url": "git@git.innoht.live:innohealthtech/hims.git"
   },
-  "author": "Jack Meyer",
-  "contributors": [
-    "Maksim Sinik",
-    "Stefano Casasola"
-  ],
+  "author": "Neeraj",
   "devDependencies": {
     "@commitlint/cli": "~9.1.2",
     "@commitlint/config-conventional": "~12.0.0",
@@ -86,7 +83,6 @@
     "chalk": "^4.0.0",
     "commitizen": "~4.2.0",
     "commitlint-config-cz": "~0.13.0",
-    "cross-env": "~7.0.0",
     "cz-conventional-changelog": "~3.3.0",
     "dateformat": "~4.5.0",
     "eslint": "~6.8.0",
@@ -117,7 +113,7 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "commit": "npx git-cz",
     "start": "npm run translation:check && react-scripts start",
-    "build": "react-scripts build",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=2048 GENERATE_SOURCEMAP=false react-scripts build",
     "update": "npx npm-check -u",
     "prepublishOnly": "npm run build",
     "test": "npm run translation:check && react-scripts test  --testPathIgnorePatterns=src/__tests__/test-utils --env=jest-environment-jsdom-sixteen",

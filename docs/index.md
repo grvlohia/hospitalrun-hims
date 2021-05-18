@@ -1,1 +1,1 @@
-# Hospitalrun Frontend Documentation
+# HIMS Documentation
