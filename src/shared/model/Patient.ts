@@ -10,20 +10,20 @@ import RelatedPerson from './RelatedPerson'
 import Visit from './Visit'
 
 export default interface Patient extends AbstractDBModel, Name, ContactInformation {
+  code: string
+  type?: string
   sex: string
   dateOfBirth: string
   isApproximateDateOfBirth: boolean
+  index: string
   preferredLanguage?: string
   occupation?: string
-  type?: string
-  code: string
   relatedPersons?: RelatedPerson[]
   allergies?: Allergy[]
-  diagnoses?: Diagnosis[]
   notes?: Note[]
-  index: string
   carePlans: CarePlan[]
   careGoals: CareGoal[]
   bloodType: string
   visits: Visit[]
+  diagnoses?: Diagnosis[]
 }

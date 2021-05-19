@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import useTranslator from '../../shared/hooks/useTranslator'
 import Diagnosis, { DiagnosisStatus } from '../../shared/model/Diagnosis'
 import Patient from '../../shared/model/Patient'
-import useAddPatientDiagnosis from '../hooks/useAddPatientDiagnosis'
+import useAddPatientDiagnosis from '../hooks/useNewAddPatientDiagnosis'
 import { DiagnosisError } from '../util/validate-diagnosis'
 import DiagnosisForm from './DiagnosisForm'
 

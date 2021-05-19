@@ -28,7 +28,7 @@ const VisitDetails = (props: Props) => {
     <div>
       <Panel title="Diagnosis" color="primary" collapsible>
         <div className="row">
-          <DiagnosesTable visit={visit} />
+          <DiagnosesTable patientId={patientId} visitId={visit.id} />
           {permissions.includes(Permissions.AddDiagnosis) && (
             <Button color="primary" onClick={() => setShowDiagnosisModal(true)}>
               Add Diagnosis

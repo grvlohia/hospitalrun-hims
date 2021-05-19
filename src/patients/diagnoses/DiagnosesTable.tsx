@@ -3,17 +3,29 @@ import format from 'date-fns/format'
 import React from 'react'
 
 import useTranslator from '../../shared/hooks/useTranslator'
-import Visit from '../../shared/model/Visit'
+import useDiagnoses from '../hooks/useDiagnoses'
 
 interface Props {
-  visit: Visit
+  patientId: string
+  visitId: string
 }
-const DiagnosesTable = ({ visit }: Props) => {
+const DiagnosesTable = ({ patientId, visitId }: Props) => {
   const { t } = useTranslator()
+  const { data: diagnoses } = useDiagnoses(patientId, visitId)
 
-  const diagnoses = visit.diagnoses || []
+  if (!diagnoses) {
+    return null
+  }
+
   if (diagnoses.length === 0) {
     return null
+  }
+
+  const onDeleteDiagnosis = (diagnosisId: string) => {
+    diagnoses.splice(
+      diagnoses.findIndex(({ id }) => id === diagnosisId),
+      1,
+    )
   }
   return (
     <Table
@@ -42,7 +54,7 @@ const DiagnosesTable = ({ visit }: Props) => {
       actions={[
         {
           label: t('actions.edit'),
-          action: (row) => console.log(row.id),
+          action: (row) => onDeleteDiagnosis(row.id),
         },
         {
           label: t('actions.delete'),
