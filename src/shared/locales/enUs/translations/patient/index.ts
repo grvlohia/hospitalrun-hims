@@ -75,6 +75,7 @@ export default {
     diagnoses: {
       label: 'Diagnoses',
       new: 'Add Diagnosis',
+      edit: 'Edit Diagnosis',
       diagnosisName: 'Name',
       diagnosisDate: 'Date',
       onsetDate: 'Onset Date',

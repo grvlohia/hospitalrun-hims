@@ -4,33 +4,25 @@ import { queryCache, useMutation } from 'react-query'
 import PatientRepository from '../../shared/db/PatientRepository'
 import Diagnosis from '../../shared/model/Diagnosis'
 import Visit from '../../shared/model/Visit'
-import { uuid } from '../../shared/util/uuid'
 import validateDiagnosis from '../util/validate-diagnosis'
 
 interface AddDiagnosisRequest {
   patientId: string
-  diagnosis: Omit<Diagnosis, 'id'>
+  diagnosis: Diagnosis
 }
 
 async function addDiagnosis(request: AddDiagnosisRequest): Promise<Diagnosis[]> {
   const error = validateDiagnosis(request.diagnosis)
   if (isEmpty(error)) {
     const patient = await PatientRepository.find(request.patientId)
-    // const diagnoses = patient.diagnoses ? [...patient.diagnoses] : []
     const visits = JSON.parse(JSON.stringify(patient.visits)) as Visit[]
     const targetVisit = visits.find((visit) => visit.id === request.diagnosis.visit)
     if (targetVisit === undefined) {
-      const invalidVisitIdError = {
-        message: 'Invalid visitId: no such visit for patient',
-      }
-      throw invalidVisitIdError
+      throw new Error('Invalid visitId: no such visit for patient')
     }
     const diagnoses = targetVisit?.diagnoses ? [...targetVisit?.diagnoses] : []
-    const newDiagnosis: Diagnosis = {
-      id: uuid(),
-      ...request.diagnosis,
-    }
-    diagnoses.push(newDiagnosis)
+    const updateIndex = diagnoses.findIndex((diagnosis) => diagnosis.id === request.diagnosis.id)
+    diagnoses[updateIndex] = { ...request.diagnosis }
     targetVisit.diagnoses = diagnoses
     await PatientRepository.saveOrUpdate({ ...patient, visits })
     return diagnoses
@@ -38,7 +30,7 @@ async function addDiagnosis(request: AddDiagnosisRequest): Promise<Diagnosis[]> 
   throw error
 }
 
-export default function useAddPatientDiagnosis() {
+export default function useEditPatientDiagnosis() {
   return useMutation(addDiagnosis, {
     onSuccess: async (data, variables) => {
       await queryCache.setQueryData(

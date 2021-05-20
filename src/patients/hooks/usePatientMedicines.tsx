@@ -14,5 +14,5 @@ async function fetchMedicines(
 }
 
 export default function usePatientMedicines(patientId: string, visitId: string) {
-  return useQuery(['medicines', patientId, visitId], fetchMedicines)
+  return useQuery(['medications', patientId, visitId], fetchMedicines)
 }
