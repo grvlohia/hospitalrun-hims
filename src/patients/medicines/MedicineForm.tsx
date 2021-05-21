@@ -63,11 +63,11 @@ const MedicineForm = (props: Props) => {
         <Column md={12}>
           <Input.DatePickerWithLabelFormGroup
             isRequired
-            name="startDate"
+            name="startDateTime"
             label="Start Date"
             value={medicine.startDateTime ? new Date(medicine.startDateTime) : new Date()}
             isEditable={!disabled}
-            onChange={(date) => onFieldChange('startDate', date.toISOString())}
+            onChange={(date) => onFieldChange('startDateTime', date.toISOString())}
           />
         </Column>
       </Row>
@@ -76,11 +76,11 @@ const MedicineForm = (props: Props) => {
         <Column md={12}>
           <Input.DatePickerWithLabelFormGroup
             isRequired
-            name="endDate"
+            name="endDateTime"
             label="End Date"
             value={medicine.endDateTime ? new Date(medicine.endDateTime) : new Date()}
             isEditable={!disabled}
-            onChange={(date) => onFieldChange('endDate', date.toISOString())}
+            onChange={(date) => onFieldChange('endDateTime', date.toISOString())}
           />
         </Column>
       </Row>

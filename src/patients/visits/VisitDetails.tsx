@@ -9,6 +9,8 @@ import { RootState } from '../../shared/store'
 import DiagnosesTable from '../diagnoses/DiagnosesTable'
 import AddDiagnosisModal from '../diagnoses/NewAddDiagnosisModal'
 import usePatient from '../hooks/usePatient'
+import AddImagingTestModal from '../imagings/AddImagingTestModal'
+import ImagingTestsTable from '../imagings/ImagingTestsTable'
 import AddMedicineModal from '../medicines/AddMedicineModal'
 import MedicinesTable from '../medicines/MedicinesTable'
 
@@ -22,6 +24,7 @@ const VisitDetails = (props: Props) => {
   const { permissions } = useSelector((state: RootState) => state.user)
   const [showDiagnosisModal, setShowDiagnosisModal] = useState(false)
   const [showMedicineModal, setShowMedicineModal] = useState(false)
+  const [showImagingModal, setShowImagingModal] = useState(false)
   const { data: patient } = usePatient(patientId)
   if (!patient) {
     return null
@@ -59,7 +62,12 @@ const VisitDetails = (props: Props) => {
       <br />
       <Panel title="Imagings" color="primary" collapsible>
         <div className="row">
-          <h1>Imagings Section</h1>
+          <ImagingTestsTable patientId={patientId} visitId={visit.id} />
+          {permissions.includes(Permissions.RequestImaging) && (
+            <Button color="primary" onClick={() => setShowImagingModal(true)}>
+              Add Imaging Test
+            </Button>
+          )}
         </div>
       </Panel>
       <AddDiagnosisModal
@@ -70,6 +78,12 @@ const VisitDetails = (props: Props) => {
       <AddMedicineModal
         show={showMedicineModal}
         onCloseButtonClick={() => setShowMedicineModal(false)}
+        patient={patient}
+        visitId={visit.id}
+      />
+      <AddImagingTestModal
+        show={showImagingModal}
+        onCloseButtonClick={() => setShowImagingModal(false)}
         patient={patient}
         visitId={visit.id}
       />

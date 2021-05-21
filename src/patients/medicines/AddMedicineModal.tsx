@@ -1,5 +1,5 @@
 import { Modal } from '@hospitalrun/components'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 import Medicine from '../../shared/model/Medicine'
 import Patient from '../../shared/model/Patient'
@@ -18,22 +18,27 @@ const AddMedicineModal = (props: NewMedicineModalProps) => {
   const { patient, show, onCloseButtonClick, visitId } = props
   const [mutate] = useAddPatientMedicine()
 
-  const initialMedicineState = {
-    visitId,
-    patientCode: patient.code,
-    name: '',
-    principalSalt: '',
-    startDateTime: new Date().toISOString(),
-    endDateTime: new Date().toISOString(),
-    dosage: '',
-    prescribedBy: '',
-    note: '',
-  }
+  const initialMedicineState = useMemo(
+    () => ({
+      visitId,
+      patientCode: patient.code,
+      name: '',
+      principalSalt: '',
+      startDateTime: new Date().toISOString(),
+      endDateTime: new Date().toISOString(),
+      dosage: '',
+      prescribedBy: '',
+      note: '',
+    }),
+    [patient, visitId],
+  )
+
   const [medicine, setMedicine] = useState(initialMedicineState)
-  const [medicineError, setMedicineError] = useState<MedicineError | undefined>(undefined)
+
   useEffect(() => {
     setMedicine(initialMedicineState)
-  }, [show])
+  }, [show, initialMedicineState])
+  const [medicineError, setMedicineError] = useState<MedicineError | undefined>(undefined)
 
   const onMedicineChange = (newMedicine: Partial<Medicine>) => {
     setMedicine(newMedicine as Medicine)

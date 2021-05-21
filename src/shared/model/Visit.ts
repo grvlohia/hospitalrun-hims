@@ -1,5 +1,6 @@
 import AbstractDBModel from './AbstractDBModel'
 import Diagnosis from './Diagnosis'
+import ImagingTest from './ImagingTest'
 import Medicine from './Medicine'
 
 export enum VisitStatus {
@@ -24,4 +25,5 @@ export default interface Visit extends AbstractDBModel {
   location: string
   diagnoses?: Diagnosis[]
   medications?: Medicine[]
+  imagingTests?: ImagingTest[]
 }
