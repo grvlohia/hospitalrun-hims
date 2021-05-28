@@ -21,7 +21,6 @@ const initialCarePlanState = {
   startDate: new Date().toISOString(),
   endDate: addMonths(new Date(), 1).toISOString(),
   note: '',
-  diagnosisId: '',
   status: CarePlanStatus.Active,
   intent: CarePlanIntent.Plan,
 }
@@ -56,7 +55,7 @@ const AddCarePlanModal = (props: Props) => {
 
   const body = (
     <CarePlanForm
-      patient={patient}
+      // patient={patient}
       carePlan={carePlan}
       carePlanError={carePlanError}
       onChange={onCarePlanChange}

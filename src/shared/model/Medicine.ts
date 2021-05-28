@@ -1,12 +1,11 @@
 export default interface Medicine {
   id: string
   visitId: string
-  patientCode: string
   name: string
-  principalSalt: string
-  startDateTime: string
-  endDateTime: string
-  dosage: string
-  prescribedBy: string
-  note: string
+  type: string
+  concentration: number | undefined
+  dose: number | undefined
+  days: number | undefined
+  comment?: string
+  prescribedBy?: string
 }

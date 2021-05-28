@@ -9,7 +9,7 @@ import TextFieldWithLabelFormGroup from '../../shared/components/input/TextField
 import TextInputWithLabelFormGroup from '../../shared/components/input/TextInputWithLabelFormGroup'
 import useTranslator from '../../shared/hooks/useTranslator'
 import CarePlan, { CarePlanIntent, CarePlanStatus } from '../../shared/model/CarePlan'
-import Patient from '../../shared/model/Patient'
+// import Patient from '../../shared/model/Patient'
 
 interface Error {
   message?: string
@@ -23,7 +23,7 @@ interface Error {
   condition?: string
 }
 interface Props {
-  patient: Patient
+  // patient: Patient
   carePlan: Partial<CarePlan>
   carePlanError?: Error
   onChange?: (newCarePlan: Partial<CarePlan>) => void
@@ -32,9 +32,9 @@ interface Props {
 
 const CarePlanForm = (props: Props) => {
   const { t } = useTranslator()
-  const { patient, carePlan, carePlanError, disabled, onChange } = props
+  const { carePlan, carePlanError, disabled, onChange } = props
 
-  const [condition, setCondition] = useState(carePlan.diagnosisId)
+  // const [condition, setCondition] = useState(carePlan.diagnosisId)
   const [status, setStatus] = useState(carePlan.status)
   const [intent, setIntent] = useState(carePlan.intent)
 
@@ -48,8 +48,8 @@ const CarePlanForm = (props: Props) => {
     }
   }
 
-  const conditionOptions: Option[] =
-    patient.diagnoses?.map((d) => ({ label: d.name, value: d.id })) || []
+  // const conditionOptions: Option[] =
+  //   patient.diagnoses?.map((d) => ({ label: d.name, value: d.id })) || []
 
   const statusOptions: Option[] = Object.values(CarePlanStatus).map((v) => ({ label: v, value: v }))
 
@@ -86,9 +86,8 @@ const CarePlanForm = (props: Props) => {
           />
         </Column>
       </Row>
-      <Row>
+      {/* <Row>
         <Column sm={12}>
-          {/* add feedback in next round */}
           <SelectWithLabelFormGroup
             name="condition"
             label={t('patient.carePlan.condition')}
@@ -103,7 +102,7 @@ const CarePlanForm = (props: Props) => {
             isInvalid={!!carePlanError?.condition}
           />
         </Column>
-      </Row>
+      </Row> */}
       <Row>
         <Column sm={6}>
           <SelectWithLabelFormGroup

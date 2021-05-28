@@ -1,5 +1,5 @@
 import { Panel, Spinner, TabsHeader, Tab, Button } from '@hospitalrun/components'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import {
   useParams,
@@ -28,6 +28,7 @@ import Medications from '../medications/Medications'
 import Note from '../notes/NoteTab'
 import RelatedPerson from '../related-persons/RelatedPersonTab'
 import { getPatientFullName } from '../util/patient-util'
+import VisitForm from '../visits/NewVisitForm'
 import VisitTab from '../visits/VisitTab'
 import ImportantPatientInfo from './ImportantPatientInfo'
 
@@ -52,6 +53,16 @@ const ViewPatient = () => {
     { text: getPatientFullName(patient), location: `/patients/${id}` },
   ]
   useAddBreadcrumbs(breadcrumbs, true)
+
+  const [showVisitForm, setShowVisitForm] = useState(false)
+
+  const toggleShowVisitForm = () => {
+    setShowVisitForm((prevShowVisitForm) => !prevShowVisitForm)
+  }
+
+  const disableShowVisitForm = () => {
+    setShowVisitForm(false)
+  }
 
   useEffect(() => {
     const buttons = []
@@ -82,10 +93,11 @@ const ViewPatient = () => {
     return <Spinner color="blue" loading size={[10, 25]} type="ScaleLoader" />
   }
 
-  return (
-    <div>
-      {' '}
-      <ImportantPatientInfo patient={patient} />
+  let content = null
+  if (showVisitForm) {
+    content = <VisitForm disabled={false} patientId={id} onClose={disableShowVisitForm} />
+  } else {
+    content = (
       <div>
         <TabsHeader>
           <Tab
@@ -180,6 +192,14 @@ const ViewPatient = () => {
           </Route>
         </Panel>
       </div>
+    )
+  }
+
+  return (
+    <div>
+      {' '}
+      <ImportantPatientInfo patient={patient} onAddVisit={toggleShowVisitForm} />
+      {content}
     </div>
   )
 }

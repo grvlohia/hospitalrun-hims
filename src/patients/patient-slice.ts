@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import isEmpty from 'lodash/isEmpty'
+// import isEmpty from 'lodash/isEmpty'
 
 import PatientRepository from '../shared/db/PatientRepository'
-import Diagnosis from '../shared/model/Diagnosis'
+// import Diagnosis from '../shared/model/Diagnosis'
 import Patient from '../shared/model/Patient'
 import { AppThunk } from '../shared/store'
-import { uuid } from '../shared/util/uuid'
+// import { uuid } from '../shared/util/uuid'
 import { cleanupPatient } from './util/set-patient-helper'
 import validatePatient from './util/validate-patient'
 
@@ -17,7 +17,7 @@ interface PatientState {
   createError?: Error
   updateError?: Error
   allergyError?: AddAllergyError
-  diagnosisError?: AddDiagnosisError
+  // diagnosisError?: AddDiagnosisError
   relatedPersonError?: AddRelatedPersonError
 }
 
@@ -44,12 +44,12 @@ interface AddAllergyError {
   name?: string
 }
 
-interface AddDiagnosisError {
-  message?: string
-  name?: string
-  date?: string
-  status?: string
-}
+// interface AddDiagnosisError {
+//   message?: string
+//   name?: string
+//   date?: string
+//   status?: string
+// }
 
 const initialState: PatientState = {
   status: 'loading',
@@ -58,7 +58,7 @@ const initialState: PatientState = {
   relatedPersons: [],
   createError: undefined,
   updateError: undefined,
-  diagnosisError: undefined,
+  // diagnosisError: undefined,
   relatedPersonError: undefined,
 }
 
@@ -88,10 +88,10 @@ const patientSlice = createSlice({
       state.status = 'error'
       state.updateError = payload
     },
-    addDiagnosisError(state, { payload }: PayloadAction<AddDiagnosisError>) {
-      state.status = 'error'
-      state.diagnosisError = payload
-    },
+    // addDiagnosisError(state, { payload }: PayloadAction<AddDiagnosisError>) {
+    //   state.status = 'error'
+    //   state.diagnosisError = payload
+    // },
   },
 })
 
@@ -102,7 +102,7 @@ export const {
   updatePatientStart,
   updatePatientSuccess,
   updatePatientError,
-  addDiagnosisError,
+  // addDiagnosisError,
 } = patientSlice.actions
 
 export const createPatient = (
@@ -157,45 +157,45 @@ export const updatePatient = (
   }
 }
 
-function validateDiagnosis(diagnosis: Diagnosis) {
-  const error: AddDiagnosisError = {}
+// function validateDiagnosis(diagnosis: Diagnosis) {
+//   const error: AddDiagnosisError = {}
 
-  if (!diagnosis.name) {
-    error.name = 'patient.diagnoses.error.nameRequired'
-  }
+//   if (!diagnosis.name) {
+//     error.name = 'patient.diagnoses.error.nameRequired'
+//   }
 
-  if (!diagnosis.diagnosisDate) {
-    error.date = 'patient.diagnoses.error.dateRequired'
-  }
+//   if (!diagnosis.diagnosisDate) {
+//     error.date = 'patient.diagnoses.error.dateRequired'
+//   }
 
-  if (!diagnosis.onsetDate) {
-    error.date = 'patient.diagnoses.error.dateRequired'
-  }
+//   if (!diagnosis.onsetDate) {
+//     error.date = 'patient.diagnoses.error.dateRequired'
+//   }
 
-  if (!diagnosis.status) {
-    error.status = 'patient.diagnoses.error.statusRequired'
-  }
-  return error
-}
+//   if (!diagnosis.status) {
+//     error.status = 'patient.diagnoses.error.statusRequired'
+//   }
+//   return error
+// }
 
-export const addDiagnosis = (
-  patientId: string,
-  diagnosis: Diagnosis,
-  onSuccess?: (patient: Patient) => void,
-): AppThunk => async (dispatch) => {
-  const newDiagnosisError = validateDiagnosis(diagnosis)
+// export const addDiagnosis = (
+//   patientId: string,
+//   diagnosis: Diagnosis,
+//   onSuccess?: (patient: Patient) => void,
+// ): AppThunk => async (dispatch) => {
+//   const newDiagnosisError = validateDiagnosis(diagnosis)
 
-  if (isEmpty(newDiagnosisError)) {
-    const patient = await PatientRepository.find(patientId)
-    const diagnoses = patient.diagnoses || []
-    diagnoses.push({ id: uuid(), ...diagnosis })
-    patient.diagnoses = diagnoses
+//   if (isEmpty(newDiagnosisError)) {
+//     const patient = await PatientRepository.find(patientId)
+//     const diagnoses = patient.diagnoses || []
+//     diagnoses.push({ id: uuid(), ...diagnosis })
+//     patient.diagnoses = diagnoses
 
-    await dispatch(updatePatient(patient, onSuccess))
-  } else {
-    newDiagnosisError.message = 'patient.diagnoses.error.unableToAdd'
-    dispatch(addDiagnosisError(newDiagnosisError))
-  }
-}
+//     await dispatch(updatePatient(patient, onSuccess))
+//   } else {
+//     newDiagnosisError.message = 'patient.diagnoses.error.unableToAdd'
+//     dispatch(addDiagnosisError(newDiagnosisError))
+//   }
+// }
 
 export default patientSlice.reducer

@@ -1,7 +1,9 @@
 import AbstractDBModel from './AbstractDBModel'
 import Diagnosis from './Diagnosis'
 import ImagingTest from './ImagingTest'
+import LabTest from './LabTest'
 import Medicine from './Medicine'
+import PatientCondition from './PatientCondition'
 
 export enum VisitStatus {
   Planned = 'planned',
@@ -19,11 +21,15 @@ export default interface Visit extends AbstractDBModel {
   updatedAt: string
   startDateTime: string
   endDateTime: string
-  type: string
-  status: VisitStatus
-  reason: string
-  location: string
+  type?: string
+  status?: VisitStatus
+  reason?: string
+  location?: string
+  condition?: PatientCondition
   diagnoses?: Diagnosis[]
   medications?: Medicine[]
+  labTests?: LabTest[]
   imagingTests?: ImagingTest[]
+  advice?: string
+  followUp?: string
 }

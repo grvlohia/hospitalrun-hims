@@ -5,19 +5,20 @@ import { useHistory } from 'react-router-dom'
 
 import useTranslator from '../../shared/hooks/useTranslator'
 import Allergy from '../../shared/model/Allergy'
-import Diagnosis from '../../shared/model/Diagnosis'
+// import Diagnosis from '../../shared/model/Diagnosis'
 import Patient from '../../shared/model/Patient'
 import Permissions from '../../shared/model/Permissions'
 import { RootState } from '../../shared/store'
 import { formatDate } from '../../shared/util/formatDate'
 import NewAllergyModal from '../allergies/NewAllergyModal'
 import AddCarePlanModal from '../care-plans/AddCarePlanModal'
-import AddDiagnosisModal from '../diagnoses/AddDiagnosisModal'
+// import AddDiagnosisModal from '../diagnoses/AddDiagnosisModal'
 import usePatientAllergies from '../hooks/usePatientAllergies'
 import AddVisitModal from '../visits/AddVisitModal'
 
 interface Props {
   patient: Patient
+  onAddVisit: () => void
 }
 
 const getPatientCode = (p: Patient): string => {
@@ -29,12 +30,12 @@ const getPatientCode = (p: Patient): string => {
 }
 
 const ImportantPatientInfo = (props: Props) => {
-  const { patient } = props
+  const { patient, onAddVisit } = props
   const { t } = useTranslator()
   const history = useHistory()
   const { permissions } = useSelector((state: RootState) => state.user)
   const [showNewAllergyModal, setShowNewAllergyModal] = useState(false)
-  const [showDiagnosisModal, setShowDiagnosisModal] = useState(false)
+  // const [showDiagnosisModal, setShowDiagnosisModal] = useState(false)
   const [showAddCarePlanModal, setShowAddCarePlanModal] = useState(false)
   const [showAddVisitModal, setShowAddVisitModal] = useState(false)
   const { data, status } = usePatientAllergies(patient.id)
@@ -42,11 +43,19 @@ const ImportantPatientInfo = (props: Props) => {
   const headerRowStyle: CSSProperties = {
     minHeight: '3rem',
     marginBottom: '1rem',
+    borderRadius: '10px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    maxWidth: '100%',
+    marginRight: '0rem',
+    marginLeft: '0rem',
+    backgroundColor: 'rgba(245,245,245,1)',
   }
 
-  const middleRowStyle: CSSProperties = {
-    minHeight: '3rem',
-    marginBottom: '1rem',
+  const headerInfoBoxStyle: CSSProperties = {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'start',
   }
 
   const headerInfoStyle: CSSProperties = {
@@ -54,7 +63,7 @@ const ImportantPatientInfo = (props: Props) => {
     flexDirection: 'column',
     position: 'relative',
     color: 'black',
-    backgroundColor: 'rgba(245,245,245,1)',
+    // backgroundColor: 'rgba(245,245,245,1)',
     fontSize: 'small',
     textAlign: 'center',
     justifyContent: 'center',
@@ -63,7 +72,7 @@ const ImportantPatientInfo = (props: Props) => {
 
   const headerInfoPatientNameStyle: CSSProperties = {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     color: 'black',
     textAlign: 'left',
     justifyContent: 'center',
@@ -74,6 +83,11 @@ const ImportantPatientInfo = (props: Props) => {
     height: '2.5rem',
   }
 
+  const middleRowStyle: CSSProperties = {
+    minHeight: '3rem',
+    marginBottom: '1rem',
+  }
+
   const middleRowSectionStyle: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
@@ -82,51 +96,70 @@ const ImportantPatientInfo = (props: Props) => {
 
   const tableContainerStyle: CSSProperties = {
     fontSize: 'small',
+    height: '5.5rem',
+    overflowX: 'hidden',
+    overflowY: 'auto',
+    scrollBehavior: 'auto',
   }
 
   return (
     <div>
       <Row style={headerRowStyle}>
-        <div className="col-2">
-          <div style={headerInfoPatientNameStyle}>
-            <h3>{patient.fullName}</h3>
+        <div style={headerInfoBoxStyle}>
+          <div className="col-3">
+            <div style={headerInfoPatientNameStyle}>
+              <h3>{patient.fullName}</h3>
+            </div>
           </div>
-        </div>
-        <div className="col-2">
-          <div style={headerInfoStyle}>
-            <strong>{t('patient.code')}</strong>
-            <h6>{getPatientCode(patient)}</h6>
+
+          <div className="col-3">
+            <div style={headerInfoStyle}>
+              <strong>{t('patient.code')}</strong>
+              <h6>{getPatientCode(patient)}</h6>
+            </div>
           </div>
-        </div>
-        <div className="col-2">
-          <div style={headerInfoStyle} className="patient-sex">
-            <strong>{t('patient.sex')}</strong>
-            <h6>{patient.sex}</h6>
+          <div className="col-3">
+            <div style={headerInfoStyle} className="patient-sex">
+              <strong>{t('patient.sex')}</strong>
+              <h6>{patient.sex}</h6>
+            </div>
           </div>
-        </div>
-        <div className="col-2">
-          <div style={headerInfoStyle} className="patient-dateOfBirth">
-            <strong>{t('patient.dateOfBirth')}</strong>
-            <h6>
-              {patient.dateOfBirth
-                ? formatDate(patient.dateOfBirth)
-                : t('patient.unknownDateOfBirth')}
-            </h6>
+          <div className="col-3">
+            <div style={headerInfoStyle} className="patient-dateOfBirth">
+              <strong>{t('patient.dateOfBirth')}</strong>
+              <h6>
+                {patient.dateOfBirth
+                  ? formatDate(patient.dateOfBirth)
+                  : t('patient.unknownDateOfBirth')}
+              </h6>
+            </div>
           </div>
         </div>
 
         <div className="col d-flex justify-content-end align-items-center">
           {permissions.includes(Permissions.AddVisit) && (
-            <Button
-              outlined
-              color="success"
-              icon="add"
-              iconLocation="left"
-              style={headerAddVisitButtonStyle}
-              onClick={() => setShowAddVisitModal(true)}
-            >
-              {t('patient.visits.new')}
-            </Button>
+            <>
+              <Button
+                outlined
+                color="success"
+                icon="add"
+                iconLocation="left"
+                style={headerAddVisitButtonStyle}
+                onClick={() => setShowAddVisitModal(true)}
+              >
+                {t('patient.visits.new')}
+              </Button>
+              <Button
+                outlined
+                color="success"
+                icon="add"
+                iconLocation="left"
+                style={headerAddVisitButtonStyle}
+                onClick={onAddVisit}
+              >
+                Add My Visit
+              </Button>
+            </>
           )}
         </div>
       </Row>
@@ -156,7 +189,7 @@ const ImportantPatientInfo = (props: Props) => {
           )}
         </div>
 
-        <div className="col diagnoses-section" style={middleRowSectionStyle}>
+        {/* <div className="col diagnoses-section" style={middleRowSectionStyle}>
           <Typography variant="h5">{t('patient.diagnoses.label')}</Typography>
           <div className="border border-primary" style={tableContainerStyle}>
             <Table
@@ -186,7 +219,7 @@ const ImportantPatientInfo = (props: Props) => {
               {t('patient.diagnoses.new')}
             </Button>
           )}
-        </div>
+        </div> */}
 
         <div className="col carePlan-section" style={middleRowSectionStyle}>
           <Typography variant="h5">{t('patient.carePlan.label')}</Typography>
@@ -232,11 +265,11 @@ const ImportantPatientInfo = (props: Props) => {
         patientId={patient.id}
       />
 
-      <AddDiagnosisModal
+      {/* <AddDiagnosisModal
         show={showDiagnosisModal}
         onCloseButtonClick={() => setShowDiagnosisModal(false)}
         patient={patient}
-      />
+      /> */}
 
       <AddCarePlanModal
         show={showAddCarePlanModal}

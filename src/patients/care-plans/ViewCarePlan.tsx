@@ -24,7 +24,8 @@ const ViewCarePlan = () => {
     return (
       <>
         <h2>{carePlan.title}</h2>
-        <CarePlanForm patient={patient} carePlan={carePlan} disabled />
+        {/* <CarePlanForm patient={patient} carePlan={carePlan} disabled /> */}
+        <CarePlanForm carePlan={carePlan} disabled />
       </>
     )
   }

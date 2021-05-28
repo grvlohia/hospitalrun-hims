@@ -7,8 +7,8 @@ import useTranslator from '../../shared/hooks/useTranslator'
 import Patient from '../../shared/model/Patient'
 import Permissions from '../../shared/model/Permissions'
 import { RootState } from '../../shared/store'
-import AddDiagnosisModal from './AddDiagnosisModal'
-import DiagnosesList from './DiagnosesList'
+// import AddDiagnosisModal from './AddDiagnosisModal'
+// import DiagnosesList from './DiagnosesList'
 
 interface Props {
   patient: Patient
@@ -28,9 +28,9 @@ const Diagnoses = (props: Props) => {
   ]
   useAddBreadcrumbs(breadcrumbs)
 
-  const onAddDiagnosisModalClose = () => {
-    setShowDiagnosisModal(false)
-  }
+  // const onAddDiagnosisModalClose = () => {
+  //   setShowDiagnosisModal(false)
+  // }
 
   return (
     <>
@@ -50,12 +50,14 @@ const Diagnoses = (props: Props) => {
         </div>
       </div>
       <br />
-      <DiagnosesList patientId={patient.id} />
-      <AddDiagnosisModal
+      {/* <DiagnosesList patientId={patient.id} /> */}
+      <strong>DiagnosesList was here</strong>
+      {showDiagnosisModal ? <h1>Diagnosis Modal was here</h1> : null}
+      {/* <AddDiagnosisModal
         show={showDiagnosisModal}
         onCloseButtonClick={onAddDiagnosisModalClose}
         patient={patient}
-      />
+      /> */}
     </>
   )
 }

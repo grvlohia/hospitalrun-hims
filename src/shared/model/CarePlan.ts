@@ -23,6 +23,5 @@ export default interface CarePlan {
   startDate: string
   endDate: string
   createdOn: string
-  diagnosisId: string
   note: string
 }
