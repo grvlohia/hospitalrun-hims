@@ -29,6 +29,7 @@ enum Permissions {
   RequestImaging = 'write:imaging',
   ViewImagings = 'read:imagings',
   ViewIncidentWidgets = 'read:incident_widgets',
+  AddMedicine = 'write:medicine',
 }
 
 export default Permissions

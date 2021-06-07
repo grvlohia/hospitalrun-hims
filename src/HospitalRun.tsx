@@ -55,6 +55,7 @@ const HospitalRun = () => {
                   <Route path="/incidents" component={Incidents} />
                   <Route path="/settings" component={Settings} />
                   <Route path="/imaging" component={Imagings} />
+                  <Route path="/login" component={() => <h1>Login Page</h1>} />
                 </Switch>
               </div>
               <Toaster autoClose={5000} hideProgressBar draggable />

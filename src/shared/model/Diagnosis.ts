@@ -11,7 +11,7 @@ export default interface Diagnosis {
   id: string
   name: string
   diagnosisDate: string
-  status?: DiagnosisStatus
-  note: string
   visit: string
+  status?: DiagnosisStatus
+  note?: string
 }

@@ -42,7 +42,7 @@ const Navbar = () => {
   }
 
   // For Mobile, hamburger menu
-  const hambergerPages = Object.keys(pageMap).map((key) => pageMap[key])
+  const hamburgerPages = Object.keys(pageMap).map((key) => pageMap[key])
 
   // For Desktop, add shortcuts menu
   const addPages = [
@@ -63,7 +63,7 @@ const Navbar = () => {
           name: 'menu',
           size: 'lg',
           type: 'link-list-icon',
-          children: getDropdownListOfPages(hambergerPages),
+          children: getDropdownListOfPages(hamburgerPages),
           label: '',
           className: 'nav-hamberger pr-4 d-md-none',
         },

@@ -15,10 +15,10 @@ export enum TemperatureUnit {
 
 export default interface PatientCondition {
   complaints: string
-  weight: number | undefined
-  weightUnit: WeightUnit
-  bloodPressure: number | undefined
-  bloodPressureUnit: BloodPressureUnit
-  temperature: number | undefined
-  temperatureUnit: TemperatureUnit
+  weight?: number | undefined
+  weightUnit?: WeightUnit
+  bloodPressure?: number | undefined
+  bloodPressureUnit?: BloodPressureUnit
+  temperature?: number | undefined
+  temperatureUnit?: TemperatureUnit
 }

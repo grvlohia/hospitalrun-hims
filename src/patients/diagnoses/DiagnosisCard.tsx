@@ -7,16 +7,18 @@ import SelectWithLabelFormGroup from '../../shared/components/input/SelectWithLa
 import TextFieldWithLabelFormGroup from '../../shared/components/input/TextFieldWithLabelFormGroup'
 import TextInputWithLabelFormGroup from '../../shared/components/input/TextInputWithLabelFormGroup'
 import Diagnosis, { DiagnosisStatus } from '../../shared/model/Diagnosis'
+import { DiagnosisError } from '../util/validate-patient-diagnosis'
 
 interface Props {
   disabled: boolean
   diagnosis: Partial<Diagnosis>
+  diagnosisError: DiagnosisError
   onSave: (newDiagnosis: Partial<Diagnosis>) => void
   onCancel: () => void
 }
 
 const DiagnosisCard = (props: Props) => {
-  const { disabled, diagnosis, onSave, onCancel } = props
+  const { disabled, diagnosis, diagnosisError, onSave, onCancel } = props
 
   const [status, setStatus] = useState(diagnosis.status)
 
@@ -46,6 +48,8 @@ const DiagnosisCard = (props: Props) => {
               isEditable={!disabled}
               value={diagnosis.name || ''}
               onChange={(event) => onFieldChange('name', event.target.value)}
+              isInvalid={!!diagnosisError.name}
+              feedback={diagnosisError.name}
             />
           </Column>
           <Column>
@@ -66,7 +70,6 @@ const DiagnosisCard = (props: Props) => {
               name="status"
               options={diagnosisStatusOptions}
               isEditable={!disabled}
-              isRequired
               placeholder="Status"
               defaultSelected={diagnosisStatusOptions.filter(({ value }) => value === status)}
               onChange={(values) => {

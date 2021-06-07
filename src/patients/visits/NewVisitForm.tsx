@@ -1,8 +1,10 @@
+/* eslint-disable react/no-array-index-key */
 import { Button, Column, Container, Panel, Row } from '@hospitalrun/components'
+import { isEmpty } from 'lodash'
 import React, { CSSProperties, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import DatePickerWithLabelFormGroup from '../../shared/components/input/DatePickerWithLabelFormGroup'
-import TextInputWithAppendedSelectFormGroup from '../../shared/components/input/TextInputWithAppendedSelectFromGroup'
 import TextInputWithLabelFormGroup from '../../shared/components/input/TextInputWithLabelFormGroup'
 import Diagnosis from '../../shared/model/Diagnosis'
 import ImagingTest from '../../shared/model/ImagingTest'
@@ -13,6 +15,8 @@ import PatientCondition, {
   TemperatureUnit,
   WeightUnit,
 } from '../../shared/model/PatientCondition'
+import Permissions from '../../shared/model/Permissions'
+import { RootState } from '../../shared/store'
 import generateCode from '../../shared/util/generateCode'
 import { uuid } from '../../shared/util/uuid'
 import DiagnosisCard from '../diagnoses/DiagnosisCard'
@@ -20,9 +24,17 @@ import useAddVisit, { RequestVisit } from '../hooks/useNewAddVisit'
 import ImagingTestCard from '../imagings/ImagingTestCard'
 import LabTestCard from '../labs/LabTestCard'
 import MedicineCard from '../medicines/MedicineCard'
+import validatePatientCondition, { PatientConditionError } from '../util/validate-patient-condition'
+import validatePatientDiagnosis, { DiagnosisError } from '../util/validate-patient-diagnosis'
+import ConditionsCard from './ConditionsCard'
 
 const headerStyle: CSSProperties = {
   backgroundColor: '#cecece',
+}
+
+interface DiagnosisObject {
+  diagnosis: Diagnosis
+  diagnosisError: DiagnosisError
 }
 
 interface Props {
@@ -33,6 +45,7 @@ interface Props {
 
 const VisitForm = (props: Props) => {
   const { disabled, patientId, onClose } = props
+  const permissions = useSelector((state: RootState) => state.user.permissions)
   const [carePlan] = useState({
     id: '',
     title: 'Cancer Treatment',
@@ -53,7 +66,8 @@ const VisitForm = (props: Props) => {
     temperature: undefined,
     temperatureUnit: TemperatureUnit.Fahrenheit,
   } as PatientCondition)
-  const [diagnoses, setDiagnoses] = useState([] as Diagnosis[])
+  const [conditionError, setConditionError] = useState<PatientConditionError | undefined>(undefined)
+  const [diagnoses, setDiagnoses] = useState([] as DiagnosisObject[])
   const [medications, setMedications] = useState([] as Medicine[])
   const [labTests, setLabTests] = useState([] as LabTest[])
   const [imagingTests, setImagingTests] = useState([] as ImagingTest[])
@@ -62,57 +76,22 @@ const VisitForm = (props: Props) => {
 
   const [mutate] = useAddVisit()
 
-  const onSaveVisit = async () => {
-    const newVisit: RequestVisit = {
-      id: visitId,
-      startDateTime: new Date().toISOString(),
-      endDateTime: new Date().toISOString(),
-      condition,
-      diagnoses,
-      medications,
-      labTests,
-      imagingTests,
-      advice,
-      followUp,
-      updatedAt: new Date().toISOString(),
-      rev: '',
-    }
-    try {
-      await mutate({ patientId, visit: newVisit })
-      onClose()
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  const onConditionChange = (fieldName: string, value: string) => {
-    if (
-      fieldName === 'complaints' ||
-      fieldName === 'weightUnit' ||
-      fieldName === 'bloodPressureUnit' ||
-      fieldName === 'temperatureUnit'
-    ) {
-      setCondition((prevState) => ({
-        ...prevState,
-        [fieldName]: value,
-      }))
-    } else {
-      setCondition((prevState) => ({
-        ...prevState,
-        [fieldName]: Number(value),
-      }))
-    }
+  const onConditionChange = (newCondition: Partial<PatientCondition>) => {
+    setCondition(newCondition as PatientCondition)
   }
 
   const onAddDiagnosis = () => {
     setDiagnoses((prevState) => [
       ...prevState,
       {
-        id: uuid(),
-        diagnosisDate: new Date().toISOString(),
-        name: '',
-        visit: visitId,
-      } as Diagnosis,
+        diagnosis: {
+          id: uuid(),
+          name: '',
+          diagnosisDate: new Date().toISOString(),
+          visit: visitId,
+        } as Diagnosis,
+        diagnosisError: {} as DiagnosisError,
+      },
     ])
   }
 
@@ -127,7 +106,15 @@ const VisitForm = (props: Props) => {
   const onDiagnosesChange = (index: number, newDiagnosis: Partial<Diagnosis>) => {
     setDiagnoses((prevState) => {
       const newState = [...prevState]
-      newState[index] = newDiagnosis as Diagnosis
+      newState[index].diagnosis = newDiagnosis as Diagnosis
+      return newState
+    })
+  }
+
+  const onDiagnosesErrorChange = (index: number, newDiagnosisError: DiagnosisError) => {
+    setDiagnoses((prevState) => {
+      const newState = [...prevState]
+      newState[index].diagnosisError = newDiagnosisError
       return newState
     })
   }
@@ -229,6 +216,40 @@ const VisitForm = (props: Props) => {
     })
   }
 
+  const onSaveVisit = async () => {
+    const error = validatePatientCondition(condition)
+    const diagnosesError = diagnoses.map((diagnosisObj, index) => {
+      const diagnosisError = validatePatientDiagnosis(diagnosisObj.diagnosis)
+      onDiagnosesErrorChange(index, diagnosisError)
+      return diagnosisError
+    })
+    console.log(diagnosesError)
+    if (isEmpty(error)) {
+      const newVisit: RequestVisit = {
+        id: visitId,
+        startDateTime: new Date().toISOString(),
+        endDateTime: new Date().toISOString(),
+        condition,
+        diagnoses: diagnoses.map((diagnosisObj) => diagnosisObj.diagnosis),
+        medications,
+        labTests,
+        imagingTests,
+        advice,
+        followUp,
+        updatedAt: new Date().toISOString(),
+        rev: '',
+      }
+      try {
+        await mutate({ patientId, visit: newVisit })
+        onClose()
+      } catch (e) {
+        console.log(e)
+      }
+    } else {
+      setConditionError(error)
+    }
+  }
+
   return (
     <form>
       <Container style={{ border: '1px #1abc9c solid' }}>
@@ -261,173 +282,102 @@ const VisitForm = (props: Props) => {
 
         <Row>
           <Container style={{ paddingTop: '15px', paddingBottom: '15px' }}>
-            <Panel color="primary" title="Condition">
-              <Row style={{ alignItems: 'flex-end' }}>
-                <Column md={6}>
-                  <TextInputWithLabelFormGroup
-                    name="complaints"
-                    isRequired
-                    label="Symptoms"
-                    placeholder="Symptoms"
-                    value={condition.complaints}
-                    isEditable={!disabled}
-                    onChange={(event) => onConditionChange('complaints', event.target.value)}
-                  />
-                </Column>
-                <Column md={2}>
-                  <TextInputWithAppendedSelectFormGroup
-                    name="weight"
-                    type="number"
-                    placeholder="Weight"
-                    value={String(condition.weight)}
-                    onChange={(event) => {
-                      onConditionChange('weight', event.target.value)
-                    }}
-                    append
-                    appendOptions={Object.values(WeightUnit).map((unit) => ({
-                      label: unit,
-                      value: unit,
-                    }))}
-                    onSelectAppend={(event) => onConditionChange('weightUnit', event.target.value)}
-                    selectComponentValue={
-                      Object.values(WeightUnit)
-                        .map((unit) => ({
-                          label: unit,
-                          value: unit,
-                        }))
-                        .filter((op) => op.value === condition.weightUnit)[0]
-                    }
-                  />
-                </Column>
-                <Column md={2}>
-                  <TextInputWithAppendedSelectFormGroup
-                    name="bloodPressure"
-                    type="number"
-                    placeholder="BP"
-                    value={String(condition.bloodPressure)}
-                    onChange={(event) => {
-                      onConditionChange('bloodPressure', event.target.value)
-                    }}
-                    append
-                    appendOptions={Object.values(BloodPressureUnit).map((unit) => ({
-                      label: unit,
-                      value: unit,
-                    }))}
-                    onSelectAppend={(event) =>
-                      onConditionChange('bloodPressureUnit', event.target.value)
-                    }
-                    selectComponentValue={
-                      Object.values(BloodPressureUnit)
-                        .map((unit) => ({
-                          label: unit,
-                          value: unit,
-                        }))
-                        .filter((op) => op.value === condition.bloodPressureUnit)[0]
-                    }
-                  />
-                </Column>
-                <Column md={2}>
-                  <TextInputWithAppendedSelectFormGroup
-                    name="temperature"
-                    type="number"
-                    placeholder="Temp."
-                    value={String(condition.temperature)}
-                    onChange={(event) => {
-                      onConditionChange('temperature', event.target.value)
-                    }}
-                    append
-                    appendOptions={Object.values(TemperatureUnit).map((unit) => ({
-                      label: unit,
-                      value: unit,
-                    }))}
-                    onSelectAppend={(event) =>
-                      onConditionChange('temperatureUnit', event.target.value)
-                    }
-                    selectComponentValue={
-                      Object.values(TemperatureUnit)
-                        .map((unit) => ({
-                          label: unit,
-                          value: unit,
-                        }))
-                        .filter((op) => op.value === condition.temperatureUnit)[0]
-                    }
-                  />
-                </Column>
-              </Row>
+            <Panel title="Conditions" color="primary">
+              <ConditionsCard
+                condition={condition}
+                disabled={!!disabled}
+                onChange={onConditionChange}
+                conditionError={conditionError}
+              />
             </Panel>
             <br />
 
-            <Panel color="primary" title="Diagnoses">
-              {diagnoses.map((diagnosis, index) => (
-                <DiagnosisCard
-                  key={`diagnosis-${index}`}
-                  disabled={false}
-                  diagnosis={diagnosis}
-                  onSave={(newDiagnosis: Partial<Diagnosis>) => {
-                    onDiagnosesChange(index, newDiagnosis)
-                  }}
-                  onCancel={() => {
-                    onRemoveDiagnosis(index)
-                  }}
-                />
-              ))}
-              <Button color="outline-primary" onClick={onAddDiagnosis}>
-                Add New Diagnosis
-              </Button>
-            </Panel>
-            <br />
+            {permissions.includes(Permissions.AddDiagnosis) && (
+              <>
+                <Panel color="primary" title="Diagnoses">
+                  {diagnoses.map((diagnosisObj, index) => (
+                    <DiagnosisCard
+                      key={`diagnosis-${index}`}
+                      disabled={false}
+                      diagnosis={diagnosisObj.diagnosis}
+                      diagnosisError={diagnosisObj.diagnosisError}
+                      onSave={(newDiagnosis: Partial<Diagnosis>) => {
+                        onDiagnosesChange(index, newDiagnosis)
+                      }}
+                      onCancel={() => {
+                        onRemoveDiagnosis(index)
+                      }}
+                    />
+                  ))}
+                  <Button color="outline-primary" onClick={onAddDiagnosis}>
+                    Add New Diagnosis
+                  </Button>
+                </Panel>
+                <br />
+              </>
+            )}
 
-            <Panel color="primary" title="Medications">
-              {medications.map((medicine, index) => (
-                <MedicineCard
-                  key={`medicine-${index}`}
-                  disabled={false}
-                  medicine={medicine}
-                  onCancel={() => onRemoveMedication(index)}
-                  onSave={(newMedicine: Partial<Medicine>) => {
-                    onMedicationChange(index, newMedicine)
-                  }}
-                />
-              ))}
-              <Button color="outline-primary" onClick={onAddMedication}>
-                Add New Medicine
-              </Button>
-            </Panel>
-            <br />
+            {permissions.includes(Permissions.AddMedicine) && (
+              <>
+                <Panel color="primary" title="Medications">
+                  {medications.map((medicine, index) => (
+                    <MedicineCard
+                      key={`medicine-${index}`}
+                      disabled={false}
+                      medicine={medicine}
+                      onCancel={() => onRemoveMedication(index)}
+                      onSave={(newMedicine: Partial<Medicine>) => {
+                        onMedicationChange(index, newMedicine)
+                      }}
+                    />
+                  ))}
+                  <Button color="outline-primary" onClick={onAddMedication}>
+                    Add New Medicine
+                  </Button>
+                </Panel>
+                <br />
+              </>
+            )}
 
             <Row>
               <Column>
-                <Panel color="primary" title="Lab Test">
-                  {labTests.map((labTest, index) => (
-                    <LabTestCard
-                      key={`labTest-${index}`}
-                      disabled={false}
-                      labTest={labTest}
-                      onDelete={() => onRemoveLabTest(index)}
-                      onSave={(newLabTest: Partial<LabTest>) => onLabTestsChange(index, newLabTest)}
-                    />
-                  ))}
-                  <Button color="outline-primary" onClick={onAddLabTest}>
-                    Add New Lab Test
-                  </Button>
-                </Panel>
+                {permissions.includes(Permissions.RequestLab) && (
+                  <Panel color="primary" title="Lab Test">
+                    {labTests.map((labTest, index) => (
+                      <LabTestCard
+                        key={`labTest-${index}`}
+                        disabled={false}
+                        labTest={labTest}
+                        onDelete={() => onRemoveLabTest(index)}
+                        onSave={(newLabTest: Partial<LabTest>) =>
+                          onLabTestsChange(index, newLabTest)
+                        }
+                      />
+                    ))}
+                    <Button color="outline-primary" onClick={onAddLabTest}>
+                      Add New Lab Test
+                    </Button>
+                  </Panel>
+                )}
               </Column>
               <Column>
-                <Panel color="primary" title="Imaging Test">
-                  {imagingTests.map((imagingTest, index) => (
-                    <ImagingTestCard
-                      key={`imagingTest-${index}`}
-                      disabled={false}
-                      imagingTest={imagingTest}
-                      onDelete={() => onRemoveImagingTest(index)}
-                      onSave={(newImagingTest: Partial<ImagingTest>) =>
-                        onImagingTestsChange(index, newImagingTest)}
-                    />
-                  ))}
-                  <Button color="outline-primary" onClick={onAddImagingTest}>
-                    Add New Imaging Test
-                  </Button>
-                </Panel>
+                {permissions.includes(Permissions.RequestImaging) && (
+                  <Panel color="primary" title="Imaging Test">
+                    {imagingTests.map((imagingTest, index) => (
+                      <ImagingTestCard
+                        key={`imagingTest-${index}`}
+                        disabled={false}
+                        imagingTest={imagingTest}
+                        onDelete={() => onRemoveImagingTest(index)}
+                        onSave={(newImagingTest: Partial<ImagingTest>) =>
+                          onImagingTestsChange(index, newImagingTest)}
+                      />
+                    ))}
+                    <Button color="outline-primary" onClick={onAddImagingTest}>
+                      Add New Imaging Test
+                    </Button>
+                  </Panel>
+                )}
               </Column>
             </Row>
             <br />
