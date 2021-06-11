@@ -3,7 +3,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
 
-import Dashboard from './dashboard/Dashboard'
+// import Dashboard from './dashboard/Dashboard'
 import Imagings from './imagings/Imagings'
 import Incidents from './incidents/Incidents'
 import Labs from './labs/Labs'
@@ -19,6 +19,8 @@ import Navbar from './shared/components/navbar/Navbar'
 import { NetworkStatusMessage } from './shared/components/network-status'
 import Sidebar from './shared/components/Sidebar'
 import { RootState } from './shared/store'
+import LoginPage from './user/view/LoginPage'
+import UserManagement from './userManagement/UserManagement'
 
 const HospitalRun = () => {
   const { title } = useTitle()
@@ -47,7 +49,7 @@ const HospitalRun = () => {
               <Breadcrumbs />
               <div>
                 <Switch>
-                  <Route exact path="/" component={Dashboard} />
+                  <Route exact path="/" component={LoginPage} />
                   <Route path="/appointments" component={Appointments} />
                   <Route path="/patients" component={Patients} />
                   <Route path="/labs" component={Labs} />
@@ -55,7 +57,8 @@ const HospitalRun = () => {
                   <Route path="/incidents" component={Incidents} />
                   <Route path="/settings" component={Settings} />
                   <Route path="/imaging" component={Imagings} />
-                  <Route path="/login" component={() => <h1>Login Page</h1>} />
+                  <Route path="/login" component={LoginPage} />
+                  <Route path="/usermanagement" component={UserManagement} />
                 </Switch>
               </div>
               <Toaster autoClose={5000} hideProgressBar draggable />

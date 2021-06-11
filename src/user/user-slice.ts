@@ -18,47 +18,51 @@ export interface UserState {
   loginError?: LoginError
 }
 
+// const initialState: UserState = {
+//   user: {
+//     givenName: 'HospitalRun',
+//     familyName: 'Test',
+//     fullName: 'HospitalRun Test',
+//     id: 'test-hospitalrun',
+//   },
+//   permissions: [
+//     Permissions.ReadPatients,
+//     Permissions.WritePatients,
+//     Permissions.ReadAppointments,
+//     Permissions.WriteAppointments,
+//     Permissions.DeleteAppointment,
+//     Permissions.AddAllergy,
+//     Permissions.AddDiagnosis,
+//     Permissions.ViewLabs,
+//     Permissions.ViewLab,
+//     Permissions.RequestLab,
+//     Permissions.CompleteLab,
+//     Permissions.CancelLab,
+//     Permissions.ViewIncident,
+//     Permissions.ViewIncidents,
+//     Permissions.ReportIncident,
+//     Permissions.ResolveIncident,
+//     Permissions.ViewIncidentWidgets,
+//     Permissions.AddCarePlan,
+//     Permissions.ReadCarePlan,
+//     Permissions.AddCareGoal,
+//     Permissions.ReadCareGoal,
+//     Permissions.RequestMedication,
+//     Permissions.CompleteMedication,
+//     Permissions.CancelMedication,
+//     Permissions.ViewMedications,
+//     Permissions.ViewMedication,
+//     Permissions.AddVisit,
+//     Permissions.ReadVisits,
+//     Permissions.ViewImagings,
+//     Permissions.RequestImaging,
+//     // new permissions added below
+//     Permissions.AddMedicine,
+//   ],
+// }
 const initialState: UserState = {
-  user: {
-    givenName: 'HospitalRun',
-    familyName: 'Test',
-    fullName: 'HospitalRun Test',
-    id: 'test-hospitalrun',
-  },
-  permissions: [
-    Permissions.ReadPatients,
-    Permissions.WritePatients,
-    Permissions.ReadAppointments,
-    Permissions.WriteAppointments,
-    Permissions.DeleteAppointment,
-    Permissions.AddAllergy,
-    Permissions.AddDiagnosis,
-    Permissions.ViewLabs,
-    Permissions.ViewLab,
-    Permissions.RequestLab,
-    Permissions.CompleteLab,
-    Permissions.CancelLab,
-    Permissions.ViewIncident,
-    Permissions.ViewIncidents,
-    Permissions.ReportIncident,
-    Permissions.ResolveIncident,
-    Permissions.ViewIncidentWidgets,
-    Permissions.AddCarePlan,
-    Permissions.ReadCarePlan,
-    Permissions.AddCareGoal,
-    Permissions.ReadCareGoal,
-    Permissions.RequestMedication,
-    Permissions.CompleteMedication,
-    Permissions.CancelMedication,
-    Permissions.ViewMedications,
-    Permissions.ViewMedication,
-    Permissions.AddVisit,
-    Permissions.ReadVisits,
-    Permissions.ViewImagings,
-    Permissions.RequestImaging,
-    // new permissions added below
-    Permissions.AddMedicine,
-  ],
+  user: {} as User,
+  permissions: [],
 }
 
 const userSlice = createSlice({
@@ -93,6 +97,7 @@ export const getCurrentSession = (username: string): AppThunk => async (dispatch
     loginSuccess({
       user: {
         id: user._id,
+        userdb: `userdb-${Buffer.from(user.name, 'utf-8').toString('hex')}`,
         givenName: (user as any).metadata.givenName,
         familyName: (user as any).metadata.familyName,
       },
@@ -104,11 +109,13 @@ export const getCurrentSession = (username: string): AppThunk => async (dispatch
 export const login = (username: string, password: string): AppThunk => async (dispatch) => {
   try {
     const response = await remoteDb.logIn(username, password)
+    console.log(response)
     const user = await remoteDb.getUser(response.name)
     dispatch(
       loginSuccess({
         user: {
           id: user._id,
+          userdb: `userdb-${Buffer.from(user.name, 'utf-8').toString('hex')}`,
           givenName: (user as any).metadata.givenName,
           familyName: (user as any).metadata.familyName,
         },

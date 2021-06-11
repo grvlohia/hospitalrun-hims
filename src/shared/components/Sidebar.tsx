@@ -96,6 +96,22 @@ const Sidebar = () => {
     </>
   )
 
+  const getUserManagementLink = () => (
+    <>
+      <ListItem
+        active={pathname === '/usermanagement'}
+        onClick={() => {
+          navigateTo('/usermanagement')
+          setExpansion('none')
+        }}
+        className="nav-item"
+        style={listItemStyle}
+      >
+        <Icon icon="admin" /> {!sidebarCollapsed && 'User Management'}
+      </ListItem>
+    </>
+  )
+
   const getPatientLinks = () => (
     <>
       <ListItem
@@ -430,6 +446,7 @@ const Sidebar = () => {
             />
           </ListItem>
           {getDashboardLink()}
+          {getUserManagementLink()}
           {getPatientLinks()}
           {getAppointmentLinks()}
           {getMedicationLinks()}
