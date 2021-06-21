@@ -54,6 +54,44 @@ const Navbar = () => {
     pageMap.newIncident,
   ]
 
+  const userDropdownLinks = user
+    ? [
+        {
+          type: 'link',
+          // label: `${t('user.login.currentlySignedInAs')} ${user?.givenName} ${
+          //   user?.familyName
+          // }`,
+          label: `${t('user.login.currentlySignedInAs')} ${user.username}`,
+          onClick: () => {
+            navigateTo('/settings')
+          },
+        },
+        {
+          type: 'link',
+          label: t('settings.label'),
+          onClick: () => {
+            navigateTo('/settings')
+          },
+        },
+        {
+          type: 'link',
+          label: t('actions.logout'),
+          onClick: () => {
+            dispatch(logout())
+            navigateTo('/login')
+          },
+        },
+      ]
+    : [
+        {
+          type: 'link',
+          label: 'Login',
+          onClick: () => {
+            navigateTo('/login')
+          },
+        },
+      ]
+
   return (
     <HospitalRunNavbar
       bg="dark"
@@ -97,32 +135,7 @@ const Navbar = () => {
         {
           type: 'link-list-icon',
           alignRight: true,
-          children: [
-            {
-              type: 'link',
-              label: `${t('user.login.currentlySignedInAs')} ${user?.givenName} ${
-                user?.familyName
-              }`,
-              onClick: () => {
-                navigateTo('/settings')
-              },
-            },
-            {
-              type: 'link',
-              label: t('settings.label'),
-              onClick: () => {
-                navigateTo('/settings')
-              },
-            },
-            {
-              type: 'link',
-              label: t('actions.logout'),
-              onClick: () => {
-                dispatch(logout())
-                navigateTo('/login')
-              },
-            },
-          ],
+          children: userDropdownLinks,
           className: 'pl-2 d-none d-md-block nav-account',
           iconClassName: 'align-bottom',
           label: 'Patient',

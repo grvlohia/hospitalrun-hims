@@ -64,9 +64,7 @@ class DbService {
   replicationObj: PouchDB.Replication.Sync<any> | null
 
   constructor() {
-    this.localDb = new PouchDB('local_innohims', { skip_setup: true, adapter: 'memory' }).setSchema(
-      schema,
-    )
+    this.localDb = new PouchDB('local_innohims').setSchema(schema)
     this.serverDb = null
     this.replicationObj = null
   }

@@ -14,7 +14,7 @@ export interface LoginError {
 
 export interface UserState {
   permissions: (Permissions | null)[]
-  user?: User
+  user?: User | null
   loginError?: LoginError
 }
 
@@ -61,8 +61,41 @@ export interface UserState {
 //   ],
 // }
 const initialState: UserState = {
-  user: {} as User,
-  permissions: [],
+  user: null,
+  permissions: [
+    Permissions.ReadPatients,
+    Permissions.WritePatients,
+    Permissions.ReadAppointments,
+    Permissions.WriteAppointments,
+    Permissions.DeleteAppointment,
+    Permissions.AddAllergy,
+    Permissions.AddDiagnosis,
+    Permissions.ViewLabs,
+    Permissions.ViewLab,
+    Permissions.RequestLab,
+    Permissions.CompleteLab,
+    Permissions.CancelLab,
+    Permissions.ViewIncident,
+    Permissions.ViewIncidents,
+    Permissions.ReportIncident,
+    Permissions.ResolveIncident,
+    Permissions.ViewIncidentWidgets,
+    Permissions.AddCarePlan,
+    Permissions.ReadCarePlan,
+    Permissions.AddCareGoal,
+    Permissions.ReadCareGoal,
+    Permissions.RequestMedication,
+    Permissions.CompleteMedication,
+    Permissions.CancelMedication,
+    Permissions.ViewMedications,
+    Permissions.ViewMedication,
+    Permissions.AddVisit,
+    Permissions.ReadVisits,
+    Permissions.ViewImagings,
+    Permissions.RequestImaging,
+    // new permissions added below
+    Permissions.AddMedicine,
+  ],
 }
 
 const userSlice = createSlice({

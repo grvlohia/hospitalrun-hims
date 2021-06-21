@@ -3,6 +3,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
 
+import Dashboard from './dashboard/Dashboard'
 // import Dashboard from './dashboard/Dashboard'
 import Imagings from './imagings/Imagings'
 import Incidents from './incidents/Incidents'
@@ -49,7 +50,7 @@ const HospitalRun = () => {
               <Breadcrumbs />
               <div>
                 <Switch>
-                  <Route exact path="/" component={LoginPage} />
+                  <Route exact path="/" component={Dashboard} />
                   <Route path="/appointments" component={Appointments} />
                   <Route path="/patients" component={Patients} />
                   <Route path="/labs" component={Labs} />

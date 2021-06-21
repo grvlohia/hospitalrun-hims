@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router'
 
 import TextInputWithLabelFormGroup from '../../shared/components/input/TextInputWithLabelFormGroup'
+import DbService from '../../shared/config/pouchdb'
 import { login } from '../user-slice'
 
 const LoginPage = () => {
@@ -16,10 +17,8 @@ const LoginPage = () => {
     justifyContent: 'center',
   }
 
-  const formSubmitHandler = () => {
-    // console.log('Logging with the following credentials')
-    // console.log(`Username: ${username}`)
-    // console.log(`Password: ${password}`)
+  const formSubmitHandler = async () => {
+    await DbService.configureForUser(username, password)
     dispatch(login(username, password))
     history.push('/')
   }
