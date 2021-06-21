@@ -18,6 +18,8 @@ import { RootState } from '../../shared/store'
 import useRequestImaging, { ImagingRequest } from '../hooks/useRequestImaging'
 import { ImagingRequestError } from '../util/validate-imaging-request'
 
+const patientRepository = new PatientRepository()
+
 const NewImagingRequest = () => {
   const { t } = useTranslator()
   const history = useHistory()
@@ -145,7 +147,7 @@ const NewImagingRequest = () => {
                 onChange={(p: Patient[]) => {
                   onPatientChange(p[0])
                 }}
-                onSearch={async (query: string) => PatientRepository.search(query)}
+                onSearch={async (query: string) => patientRepository.search(query)}
                 searchAccessor="fullName"
                 renderMenuItemChildren={(p: Patient) => <div>{`${p.fullName} (${p.code})`}</div>}
                 isInvalid={!!error?.patient}

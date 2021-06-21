@@ -3,8 +3,10 @@ import { useQuery } from 'react-query'
 import PatientRepository from '../../shared/db/PatientRepository'
 import Medication from '../../shared/model/Medication'
 
+const patientRepository = new PatientRepository()
+
 async function fetchPatientMedications(_: string, patientId: string): Promise<Medication[]> {
-  const fetchedMedications = await PatientRepository.getMedications(patientId)
+  const fetchedMedications = await patientRepository.getMedications(patientId)
   return fetchedMedications || []
 }
 

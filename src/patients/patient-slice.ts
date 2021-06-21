@@ -9,6 +9,8 @@ import { AppThunk } from '../shared/store'
 import { cleanupPatient } from './util/set-patient-helper'
 import validatePatient from './util/validate-patient'
 
+const patientRepository = new PatientRepository()
+
 interface PatientState {
   status: 'loading' | 'error' | 'completed'
   isUpdatedSuccessfully: boolean
@@ -115,7 +117,7 @@ export const createPatient = (
   const newPatientError = validatePatient(cleanPatient)
 
   if (!newPatientError) {
-    const newPatient = await PatientRepository.save(cleanPatient)
+    const newPatient = await patientRepository.save(cleanPatient)
     dispatch(createPatientSuccess())
 
     if (onSuccess) {
@@ -141,7 +143,7 @@ export const updatePatient = (
   const updateError = validatePatient(cleanPatient)
 
   if (!updateError) {
-    const updatedPatient = await PatientRepository.saveOrUpdate(cleanPatient)
+    const updatedPatient = await patientRepository.saveOrUpdate(cleanPatient)
     dispatch(updatePatientSuccess(updatedPatient))
 
     if (onSuccess) {
@@ -186,7 +188,7 @@ export const updatePatient = (
 //   const newDiagnosisError = validateDiagnosis(diagnosis)
 
 //   if (isEmpty(newDiagnosisError)) {
-//     const patient = await PatientRepository.find(patientId)
+//     const patient = await patientRepository.find(patientId)
 //     const diagnoses = patient.diagnoses || []
 //     diagnoses.push({ id: uuid(), ...diagnosis })
 //     patient.diagnoses = diagnoses

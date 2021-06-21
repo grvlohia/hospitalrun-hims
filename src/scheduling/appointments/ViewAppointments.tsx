@@ -11,6 +11,8 @@ import useTranslator from '../../shared/hooks/useTranslator'
 import Appointment from '../../shared/model/Appointment'
 import useAppointments from '../hooks/useAppointments'
 
+const patientRepository = new PatientRepository()
+
 interface Event {
   id: string
   start: Date
@@ -54,7 +56,7 @@ const ViewAppointments = () => {
   useEffect(() => {
     if (appointments && !isLoading) {
       appointments.map(async (appointment: Appointment) => {
-        const patient = await PatientRepository.find(appointment.patient)
+        const patient = await patientRepository.find(appointment.patient)
         setEvents((eventsArray) => [
           ...eventsArray,
           {

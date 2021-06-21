@@ -6,6 +6,8 @@ import Allergy from '../../shared/model/Allergy'
 import { uuid } from '../../shared/util/uuid'
 import validateAllergy from '../util/validate-allergy'
 
+const patientRepository = new PatientRepository()
+
 interface AddAllergyRequest {
   patientId: string
   allergy: Omit<Allergy, 'id'>
@@ -15,7 +17,7 @@ async function addAllergy(request: AddAllergyRequest): Promise<Allergy[]> {
   const error = validateAllergy(request.allergy)
 
   if (isEmpty(error)) {
-    const patient = await PatientRepository.find(request.patientId)
+    const patient = await patientRepository.find(request.patientId)
     const allergies = patient.allergies ? [...patient.allergies] : []
     const newAllergy: Allergy = {
       id: uuid(),
@@ -23,7 +25,7 @@ async function addAllergy(request: AddAllergyRequest): Promise<Allergy[]> {
     }
     allergies.push(newAllergy)
 
-    await PatientRepository.saveOrUpdate({
+    await patientRepository.saveOrUpdate({
       ...patient,
       allergies,
     })

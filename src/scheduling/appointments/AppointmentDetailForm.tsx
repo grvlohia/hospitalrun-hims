@@ -12,6 +12,8 @@ import useTranslator from '../../shared/hooks/useTranslator'
 import Appointment from '../../shared/model/Appointment'
 import Patient from '../../shared/model/Patient'
 
+const patientRepository = new PatientRepository()
+
 interface Props {
   appointment: Appointment
   patient?: Patient
@@ -58,7 +60,7 @@ const AppointmentDetailForm = (props: Props) => {
                 (p: Patient[]) => onFieldChange && p[0] && onFieldChange('patient', p[0].id)
                 // eslint-disable-next-line react/jsx-curly-newline
               }
-              onSearch={async (query: string) => PatientRepository.search(query)}
+              onSearch={async (query: string) => patientRepository.search(query)}
               searchAccessor="fullName"
               renderMenuItemChildren={(p: Patient) => <div>{`${p.fullName} (${p.code})`}</div>}
               isInvalid={!!error?.patient}

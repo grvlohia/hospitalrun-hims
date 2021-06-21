@@ -17,6 +17,8 @@ import Patient from '../../shared/model/Patient'
 import { RootState } from '../../shared/store'
 import { requestMedication } from '../medication-slice'
 
+const patientRepository = new PatientRepository()
+
 const NewMedicationRequest = () => {
   const { t } = useTranslator()
   const dispatch = useDispatch()
@@ -131,7 +133,7 @@ const NewMedicationRequest = () => {
             id="patientTypeahead"
             placeholder={t('medications.medication.patient')}
             onChange={(p: Patient[]) => onPatientChange(p[0])}
-            onSearch={async (query: string) => PatientRepository.search(query)}
+            onSearch={async (query: string) => patientRepository.search(query)}
             searchAccessor="fullName"
             renderMenuItemChildren={(p: Patient) => <div>{`${p.fullName} (${p.code})`}</div>}
             isInvalid={!!error.patient}

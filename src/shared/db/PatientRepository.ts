@@ -65,4 +65,4 @@ class PatientRepository extends Repository<Patient> {
   }
 }
 
-export default new PatientRepository()
+export default PatientRepository

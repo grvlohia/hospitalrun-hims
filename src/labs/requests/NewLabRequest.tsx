@@ -19,6 +19,8 @@ import { RootState } from '../../shared/store'
 import useRequestLab from '../hooks/useRequestLab'
 import { LabError } from '../utils/validate-lab'
 
+const patientRepository = new PatientRepository()
+
 const NewLabRequest = () => {
   const { t } = useTranslator()
   const history = useHistory()
@@ -97,7 +99,7 @@ const NewLabRequest = () => {
         'success',
         t('states.success'),
         `${t('labs.successfullyCreated')} ${newLab?.type} ${t('labs.lab.for')} ${
-          (await PatientRepository.find(newLab?.patient || '')).fullName
+          (await patientRepository.find(newLab?.patient || '')).fullName
         }`,
       )
       setError(undefined)
@@ -136,7 +138,7 @@ const NewLabRequest = () => {
                 id="patientTypeahead"
                 placeholder={t('labs.lab.patient')}
                 onChange={(p: Patient[]) => onPatientChange(p[0])}
-                onSearch={async (query: string) => PatientRepository.search(query)}
+                onSearch={async (query: string) => patientRepository.search(query)}
                 searchAccessor="fullName"
                 renderMenuItemChildren={(p: Patient) => <div>{`${p.fullName} (${p.code})`}</div>}
                 isInvalid={!!error?.patient}

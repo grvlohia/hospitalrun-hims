@@ -5,6 +5,8 @@ import PatientRepository from '../../shared/db/PatientRepository'
 import Visit from '../../shared/model/Visit'
 import validateVisit from '../util/validate-visit'
 
+const patientRepository = new PatientRepository()
+
 export type RequestVisit = Omit<Visit, 'createdAt'>
 interface AddVisitRequest {
   patientId: string
@@ -14,13 +16,13 @@ interface AddVisitRequest {
 async function addVisit(request: AddVisitRequest): Promise<Visit[]> {
   const error = validateVisit(request.visit)
   if (isEmpty(error)) {
-    const patient = await PatientRepository.find(request.patientId)
+    const patient = await patientRepository.find(request.patientId)
     const visits = patient.visits || ([] as Visit[])
     visits.push({
       ...request.visit,
       createdAt: new Date(Date.now().valueOf()).toISOString(),
     })
-    await PatientRepository.saveOrUpdate({
+    await patientRepository.saveOrUpdate({
       ...patient,
       visits,
     })
