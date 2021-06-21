@@ -1,6 +1,6 @@
-import PouchDb from 'pouchdb'
 import { useMutation } from 'react-query'
 
+import DbService from '../../shared/config/pouchdb'
 import User from '../../shared/model/User'
 import { uuid } from '../../shared/util/uuid'
 
@@ -11,12 +11,13 @@ interface AddStaffRequest {
 }
 
 const addStaffMember = async (request: AddStaffRequest) => {
-  const userDb = new PouchDb(`${process.env.REACT_APP_REMOTE_COUCHDB}/${request.user.userdb}`)
+  const remoteDb = DbService.getServerDb()
+  const userDbString = `userdb-${Buffer.from(request.user.username).toString('hex')}`
   try {
-    const response = await userDb.put({
+    const response = await remoteDb.put({
       _id: uuid(),
       innodata: {
-        sourceDb: request.user.userdb,
+        sourceDb: userDbString,
         type: 'create_staff',
         loginName: request.loginName,
         domain: process.env.REACT_APP_TENANT_DOMAIN,

@@ -1,9 +1,10 @@
 import escapeStringRegexp from 'escape-string-regexp'
 
-import { relationalDb } from '../config/pouchdb'
+import DbService from '../config/pouchdb'
 import Appointment from '../model/Appointment'
 import Repository from './Repository'
 
+const relationalDb = DbService.getLocalDb()
 class AppointmentRepository extends Repository<Appointment> {
   constructor() {
     super('appointment', relationalDb)

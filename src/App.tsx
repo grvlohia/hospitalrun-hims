@@ -8,9 +8,10 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 import HospitalRun from './HospitalRun'
 import { TitleProvider } from './page-header/title/TitleContext'
-import { remoteDb } from './shared/config/pouchdb'
+import DbService from './shared/config/pouchdb'
 import { getCurrentSession } from './user/user-slice'
 
+const remoteDb = DbService.getServerDb()
 const App: React.FC = () => {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(true)

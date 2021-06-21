@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { remoteDb } from '../shared/config/pouchdb'
+import DbService from '../shared/config/pouchdb'
 import Permissions from '../shared/model/Permissions'
 import User from '../shared/model/User'
 import { AppThunk } from '../shared/store'
@@ -92,12 +92,13 @@ const userSlice = createSlice({
 export const { fetchPermissions, loginError, loginSuccess, logoutSuccess } = userSlice.actions
 
 export const getCurrentSession = (username: string): AppThunk => async (dispatch) => {
+  const remoteDb = DbService.getServerDb()
   const user = await remoteDb.getUser(username)
   dispatch(
     loginSuccess({
       user: {
         id: user._id,
-        userdb: `userdb-${Buffer.from(user.name, 'utf-8').toString('hex')}`,
+        username: user.name,
         givenName: (user as any).metadata.givenName,
         familyName: (user as any).metadata.familyName,
       },
@@ -107,17 +108,17 @@ export const getCurrentSession = (username: string): AppThunk => async (dispatch
 }
 
 export const login = (username: string, password: string): AppThunk => async (dispatch) => {
+  const remoteDb = DbService.getServerDb()
   try {
     const response = await remoteDb.logIn(username, password)
-    console.log(response)
-    const user = await remoteDb.getUser(response.name)
+    // const user = await remoteDb.getUser(response.name)
     dispatch(
       loginSuccess({
         user: {
-          id: user._id,
-          userdb: `userdb-${Buffer.from(user.name, 'utf-8').toString('hex')}`,
-          givenName: (user as any).metadata.givenName,
-          familyName: (user as any).metadata.familyName,
+          id: `org.couchdb.user:${response.name}`,
+          username: response.name,
+          // givenName: (user as any).metadata.givenName,
+          // familyName: (user as any).metadata.familyName,
         },
         permissions: initialState.permissions,
       }),
@@ -142,8 +143,12 @@ export const login = (username: string, password: string): AppThunk => async (di
 }
 
 export const logout = (): AppThunk => async (dispatch) => {
-  await remoteDb.logOut()
-  dispatch(logoutSuccess())
+  const remoteDb = DbService.getServerDb()
+  if (remoteDb) {
+    await remoteDb.logOut()
+    DbService.destroyLocalDb()
+    dispatch(logoutSuccess())
+  }
 }
 
 export default userSlice.reducer

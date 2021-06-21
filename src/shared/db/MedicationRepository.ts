@@ -1,8 +1,10 @@
 import MedicationSearchRequest from '../../medications/models/MedicationSearchRequest'
-import { relationalDb } from '../config/pouchdb'
+import DbService from '../config/pouchdb'
 import Medication from '../model/Medication'
 import Repository from './Repository'
 import SortRequest from './SortRequest'
+
+const relationalDb = DbService.getLocalDb()
 
 interface SearchContainer extends MedicationSearchRequest {
   defaultSortRequest: SortRequest

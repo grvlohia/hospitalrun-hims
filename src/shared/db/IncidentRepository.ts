@@ -1,7 +1,9 @@
 import IncidentFilter from '../../incidents/IncidentFilter'
-import { relationalDb } from '../config/pouchdb'
+import DbService from '../config/pouchdb'
 import Incident from '../model/Incident'
 import Repository from './Repository'
+
+const relationalDb = DbService.getLocalDb()
 
 interface SearchOptions {
   status: IncidentFilter

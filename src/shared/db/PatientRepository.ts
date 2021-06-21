@@ -1,12 +1,14 @@
 import escapeStringRegexp from 'escape-string-regexp'
 
-import { relationalDb } from '../config/pouchdb'
+import DbService from '../config/pouchdb'
 import Appointment from '../model/Appointment'
 import Lab from '../model/Lab'
 import Medication from '../model/Medication'
 import Patient from '../model/Patient'
 import generateCode from '../util/generateCode'
 import Repository from './Repository'
+
+const relationalDb = DbService.getLocalDb()
 
 class PatientRepository extends Repository<Patient> {
   constructor() {

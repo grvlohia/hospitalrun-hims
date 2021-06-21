@@ -1,8 +1,10 @@
-import { relationalDb } from '../config/pouchdb'
+import DbService from '../config/pouchdb'
 import Lab from '../model/Lab'
 import generateCode from '../util/generateCode'
 import Repository from './Repository'
 import SortRequest from './SortRequest'
+
+const relationalDb = DbService.getLocalDb()
 
 interface SearchContainer {
   text: string
