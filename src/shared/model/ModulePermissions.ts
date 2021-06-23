@@ -1,10 +1,11 @@
 enum ModulePermissions {
-  TenantAdmin = 'tenant-admin',
+  UserManagement = 'admin',
+  Registration = 'registration',
+  PatientManagement = 'patient',
+  Payment = 'payment',
   Doctor = 'doctor',
-  LabAssistant = 'lab-assistant',
-  Receptionist = 'receptionist',
-  Cashier = 'cashier',
-  Physiotherapist = 'physiotherapist',
+  LabManagement = 'lab',
+  Physiotherapy = 'physiotherapy',
 }
 
 export default ModulePermissions

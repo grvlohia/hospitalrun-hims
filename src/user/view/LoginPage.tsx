@@ -1,32 +1,44 @@
-import { Button, Column, Container, Row } from '@hospitalrun/components'
+import { Alert, Button, Column, Container, Row, Toast } from '@hospitalrun/components'
 import React, { CSSProperties, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
 
 import TextInputWithLabelFormGroup from '../../shared/components/input/TextInputWithLabelFormGroup'
-import DbService from '../../shared/config/pouchdb'
+import useTranslator from '../../shared/hooks/useTranslator'
+import { RootState } from '../../shared/store'
 import { login } from '../user-slice'
 
 const LoginPage = () => {
   const history = useHistory()
   const dispatch = useDispatch()
+  const { t } = useTranslator()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const loginError = useSelector((state: RootState) => state.user.loginError)
+  const user = useSelector((state: RootState) => state.user.user)
 
   const rowStyles: CSSProperties = {
     justifyContent: 'center',
   }
 
   const formSubmitHandler = async () => {
-    await DbService.configureForUser(username, password)
     dispatch(login(username, password))
+  }
+
+  if (user) {
     history.push('/')
+    Toast('success', 'Logged In', `Successfully Logged In as ${username}`)
   }
 
   return (
     <Container>
       <form>
         <h1 style={{ textAlign: 'center' }}>Login</h1>
+        <Row style={rowStyles}>
+          <Column md={6}>
+            {loginError ? <Alert color="danger" message={t(loginError.message)} /> : null}
+          </Column>
+        </Row>
         <Row style={rowStyles}>
           <Column md={6}>
             <TextInputWithLabelFormGroup
@@ -37,6 +49,8 @@ const LoginPage = () => {
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              isInvalid={!!loginError?.username}
+              feedback={t(loginError?.username)}
             />
           </Column>
         </Row>
@@ -51,6 +65,8 @@ const LoginPage = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              isInvalid={!!loginError?.password}
+              feedback={t(loginError?.password)}
             />
           </Column>
         </Row>

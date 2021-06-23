@@ -69,7 +69,7 @@ class DbService {
     this.replicationObj = null
   }
 
-  public teardown() {
+  public teardownServerDb() {
     if (!this.serverDb) {
       return
     }
@@ -79,8 +79,8 @@ class DbService {
     this.serverDb = null
   }
 
-  public async configureForUser(username: string, password: string) {
-    this.teardown()
+  public configureForUser(username: string, password: string) {
+    this.teardownServerDb()
 
     const userDb = `userdb-${Buffer.from(username, 'utf-8').toString('hex')}`
 
@@ -92,6 +92,16 @@ class DbService {
       },
     })
 
+    // this.replicationObj = this.localDb.sync(this.serverDb, {
+    //   live: true,
+    //   retry: true,
+    // })
+  }
+
+  public startSyncing() {
+    if (!this.serverDb) {
+      throw new Error('ServerDb is not set.')
+    }
     this.replicationObj = this.localDb.sync(this.serverDb, {
       live: true,
       retry: true,

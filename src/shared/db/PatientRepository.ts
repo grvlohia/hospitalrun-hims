@@ -9,7 +9,6 @@ import generateCode from '../util/generateCode'
 import Repository from './Repository'
 
 const relationalDb = DbService.getLocalDb()
-
 class PatientRepository extends Repository<Patient> {
   constructor() {
     super('patient', relationalDb)

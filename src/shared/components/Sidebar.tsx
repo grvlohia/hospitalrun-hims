@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useLocation, useHistory } from 'react-router-dom'
 
 import useTranslator from '../hooks/useTranslator'
+import ModulePermissions from '../model/ModulePermissions'
 import Permissions from '../model/Permissions'
 import { RootState } from '../store'
 import { updateSidebar } from './component-slice'
@@ -12,6 +13,7 @@ const Sidebar = () => {
   const dispatch = useDispatch()
   const { sidebarCollapsed } = useSelector((state: RootState) => state.components)
   const permissions = useSelector((state: RootState) => state.user.permissions)
+  const enabledModules = useSelector((state: RootState) => state.user.modules)
 
   const { t } = useTranslator()
   const path = useLocation()
@@ -96,176 +98,180 @@ const Sidebar = () => {
     </>
   )
 
-  const getUserManagementLink = () => (
-    <>
-      <ListItem
-        active={pathname === '/usermanagement'}
-        onClick={() => {
-          navigateTo('/usermanagement')
-          setExpansion('none')
-        }}
-        className="nav-item"
-        style={listItemStyle}
-      >
-        <Icon icon="admin" /> {!sidebarCollapsed && 'User Management'}
-      </ListItem>
-    </>
-  )
+  const getUserManagementLink = () =>
+    enabledModules.includes(ModulePermissions.UserManagement) && (
+      <>
+        <ListItem
+          active={pathname === '/usermanagement'}
+          onClick={() => {
+            navigateTo('/usermanagement')
+            setExpansion('none')
+          }}
+          className="nav-item"
+          style={listItemStyle}
+        >
+          <Icon icon="admin" /> {!sidebarCollapsed && 'User Management'}
+        </ListItem>
+      </>
+    )
 
-  const getPatientLinks = () => (
-    <>
-      <ListItem
-        active={splittedPath[1].includes('patient')}
-        onClick={() => {
-          navigateTo('/patients')
-          if (expandedItem === 'patient') {
-            setExpandedItem('none')
-            return
-          }
+  const getPatientLinks = () =>
+    enabledModules.includes(ModulePermissions.PatientManagement) && (
+      <>
+        <ListItem
+          active={splittedPath[1].includes('patient')}
+          onClick={() => {
+            navigateTo('/patients')
+            if (expandedItem === 'patient') {
+              setExpandedItem('none')
+              return
+            }
 
-          setExpandedItem('patient')
-        }}
-        className="nav-item"
-        style={listItemStyle}
-      >
-        <Icon
-          icon={
-            splittedPath[1].includes('patient') && expandedItem === 'patient'
-              ? 'down-arrow'
-              : 'right-arrow'
-          }
-          style={expandibleArrow}
-        />
-        <Icon icon="patients" /> {!sidebarCollapsed && t('patients.label')}
-      </ListItem>
-      {splittedPath[1].includes('patient') && expandedItem === 'patient' && (
-        <List layout="flush">
-          {permissions.includes(Permissions.WritePatients) && (
-            <ListItem
-              className="nav-item"
-              style={listSubItemStyleNew}
-              onClick={() => navigateTo('/patients/new')}
-              active={splittedPath[1].includes('patients') && splittedPath.length > 2}
-            >
-              <Icon icon="patient-add" style={iconMargin} />
-              {!sidebarCollapsed && t('patients.newPatient')}
-            </ListItem>
-          )}
-          {permissions.includes(Permissions.ReadPatients) && (
-            <ListItem
-              className="nav-item"
-              style={listSubItemStyle}
-              onClick={() => navigateTo('/patients')}
-              active={splittedPath[1].includes('patients') && splittedPath.length < 3}
-            >
-              <Icon icon="incident" style={iconMargin} />
-              {!sidebarCollapsed && t('patients.patientsList')}
-            </ListItem>
-          )}
-        </List>
-      )}
-    </>
-  )
+            setExpandedItem('patient')
+          }}
+          className="nav-item"
+          style={listItemStyle}
+        >
+          <Icon
+            icon={
+              splittedPath[1].includes('patient') && expandedItem === 'patient'
+                ? 'down-arrow'
+                : 'right-arrow'
+            }
+            style={expandibleArrow}
+          />
+          <Icon icon="patients" /> {!sidebarCollapsed && t('patients.label')}
+        </ListItem>
+        {splittedPath[1].includes('patient') && expandedItem === 'patient' && (
+          <List layout="flush">
+            {permissions.includes(Permissions.WritePatients) && (
+              <ListItem
+                className="nav-item"
+                style={listSubItemStyleNew}
+                onClick={() => navigateTo('/patients/new')}
+                active={splittedPath[1].includes('patients') && splittedPath.length > 2}
+              >
+                <Icon icon="patient-add" style={iconMargin} />
+                {!sidebarCollapsed && t('patients.newPatient')}
+              </ListItem>
+            )}
+            {permissions.includes(Permissions.ReadPatients) && (
+              <ListItem
+                className="nav-item"
+                style={listSubItemStyle}
+                onClick={() => navigateTo('/patients')}
+                active={splittedPath[1].includes('patients') && splittedPath.length < 3}
+              >
+                <Icon icon="incident" style={iconMargin} />
+                {!sidebarCollapsed && t('patients.patientsList')}
+              </ListItem>
+            )}
+          </List>
+        )}
+      </>
+    )
 
-  const getAppointmentLinks = () => (
-    <>
-      <ListItem
-        active={splittedPath[1].includes('appointments')}
-        onClick={() => {
-          navigateTo('/appointments')
-          setExpansion('appointment')
-        }}
-        className="nav-item"
-        style={listItemStyle}
-      >
-        <Icon
-          icon={
-            splittedPath[1].includes('appointments') && expandedItem === 'appointment'
-              ? 'down-arrow'
-              : 'right-arrow'
-          }
-          style={expandibleArrow}
-        />
-        <Icon icon="appointment" /> {!sidebarCollapsed && t('scheduling.label')}
-      </ListItem>
-      {splittedPath[1].includes('appointment') && expandedItem === 'appointment' && (
-        <List layout="flush" className="nav flex-column">
-          {permissions.includes(Permissions.WriteAppointments) && (
-            <ListItem
-              className="nav-item"
-              style={listSubItemStyleNew}
-              onClick={() => navigateTo('/appointments/new')}
-              active={splittedPath[1].includes('appointments') && splittedPath.length > 2}
-            >
-              <Icon icon="appointment-add" style={iconMargin} />
-              {!sidebarCollapsed && t('scheduling.appointments.new')}
-            </ListItem>
-          )}
-          {permissions.includes(Permissions.ReadAppointments) && (
-            <ListItem
-              className="nav-item"
-              style={listSubItemStyle}
-              onClick={() => navigateTo('/appointments')}
-              active={splittedPath[1].includes('appointments') && splittedPath.length < 3}
-            >
-              <Icon icon="incident" style={iconMargin} />
-              {!sidebarCollapsed && t('scheduling.appointments.schedule')}
-            </ListItem>
-          )}
-        </List>
-      )}
-    </>
-  )
+  const getAppointmentLinks = () =>
+    enabledModules.includes(ModulePermissions.Registration) && (
+      <>
+        <ListItem
+          active={splittedPath[1].includes('appointments')}
+          onClick={() => {
+            navigateTo('/appointments')
+            setExpansion('appointment')
+          }}
+          className="nav-item"
+          style={listItemStyle}
+        >
+          <Icon
+            icon={
+              splittedPath[1].includes('appointments') && expandedItem === 'appointment'
+                ? 'down-arrow'
+                : 'right-arrow'
+            }
+            style={expandibleArrow}
+          />
+          <Icon icon="appointment" /> {!sidebarCollapsed && t('scheduling.label')}
+        </ListItem>
+        {splittedPath[1].includes('appointment') && expandedItem === 'appointment' && (
+          <List layout="flush" className="nav flex-column">
+            {permissions.includes(Permissions.WriteAppointments) && (
+              <ListItem
+                className="nav-item"
+                style={listSubItemStyleNew}
+                onClick={() => navigateTo('/appointments/new')}
+                active={splittedPath[1].includes('appointments') && splittedPath.length > 2}
+              >
+                <Icon icon="appointment-add" style={iconMargin} />
+                {!sidebarCollapsed && t('scheduling.appointments.new')}
+              </ListItem>
+            )}
+            {permissions.includes(Permissions.ReadAppointments) && (
+              <ListItem
+                className="nav-item"
+                style={listSubItemStyle}
+                onClick={() => navigateTo('/appointments')}
+                active={splittedPath[1].includes('appointments') && splittedPath.length < 3}
+              >
+                <Icon icon="incident" style={iconMargin} />
+                {!sidebarCollapsed && t('scheduling.appointments.schedule')}
+              </ListItem>
+            )}
+          </List>
+        )}
+      </>
+    )
 
-  const getLabLinks = () => (
-    <>
-      <ListItem
-        active={splittedPath[1].includes('labs')}
-        onClick={() => {
-          navigateTo('/labs')
-          setExpansion('labs')
-        }}
-        className="nav-item"
-        style={listItemStyle}
-      >
-        <Icon
-          icon={
-            splittedPath[1].includes('labs') && expandedItem === 'labs'
-              ? 'down-arrow'
-              : 'right-arrow'
-          }
-          style={expandibleArrow}
-        />
-        <Icon icon="lab" /> {!sidebarCollapsed && t('labs.label')}
-      </ListItem>
-      {splittedPath[1].includes('labs') && expandedItem === 'labs' && (
-        <List layout="flush" className="nav flex-column">
-          {permissions.includes(Permissions.RequestLab) && (
-            <ListItem
-              className="nav-item"
-              style={listSubItemStyleNew}
-              onClick={() => navigateTo('/labs/new')}
-              active={splittedPath[1].includes('labs') && splittedPath.length > 2}
-            >
-              <Icon icon="add" style={iconMargin} />
-              {!sidebarCollapsed && t('labs.requests.new')}
-            </ListItem>
-          )}
-          {permissions.includes(Permissions.ViewLabs) && (
-            <ListItem
-              className="nav-item"
-              style={listSubItemStyle}
-              onClick={() => navigateTo('/labs')}
-              active={splittedPath[1].includes('labs') && splittedPath.length < 3}
-            >
-              <Icon icon="incident" style={iconMargin} />
-              {!sidebarCollapsed && t('labs.requests.label')}
-            </ListItem>
-          )}
-        </List>
-      )}
-    </>
-  )
+  const getLabLinks = () =>
+    enabledModules.includes(ModulePermissions.LabManagement) && (
+      <>
+        <ListItem
+          active={splittedPath[1].includes('labs')}
+          onClick={() => {
+            navigateTo('/labs')
+            setExpansion('labs')
+          }}
+          className="nav-item"
+          style={listItemStyle}
+        >
+          <Icon
+            icon={
+              splittedPath[1].includes('labs') && expandedItem === 'labs'
+                ? 'down-arrow'
+                : 'right-arrow'
+            }
+            style={expandibleArrow}
+          />
+          <Icon icon="lab" /> {!sidebarCollapsed && t('labs.label')}
+        </ListItem>
+        {splittedPath[1].includes('labs') && expandedItem === 'labs' && (
+          <List layout="flush" className="nav flex-column">
+            {permissions.includes(Permissions.RequestLab) && (
+              <ListItem
+                className="nav-item"
+                style={listSubItemStyleNew}
+                onClick={() => navigateTo('/labs/new')}
+                active={splittedPath[1].includes('labs') && splittedPath.length > 2}
+              >
+                <Icon icon="add" style={iconMargin} />
+                {!sidebarCollapsed && t('labs.requests.new')}
+              </ListItem>
+            )}
+            {permissions.includes(Permissions.ViewLabs) && (
+              <ListItem
+                className="nav-item"
+                style={listSubItemStyle}
+                onClick={() => navigateTo('/labs')}
+                active={splittedPath[1].includes('labs') && splittedPath.length < 3}
+              >
+                <Icon icon="incident" style={iconMargin} />
+                {!sidebarCollapsed && t('labs.requests.label')}
+              </ListItem>
+            )}
+          </List>
+        )}
+      </>
+    )
 
   const getMedicationLinks = () => (
     <>
@@ -378,55 +384,56 @@ const Sidebar = () => {
     </>
   )
 
-  const getImagingLinks = () => (
-    <>
-      <ListItem
-        active={splittedPath[1].includes('imaging')}
-        onClick={() => {
-          navigateTo('/imaging')
-          setExpansion('imagings')
-        }}
-        className="nav-item"
-        style={listItemStyle}
-      >
-        <Icon
-          icon={
-            splittedPath[1].includes('imaging') && expandedItem === 'imagings'
-              ? 'down-arrow'
-              : 'right-arrow'
-          }
-          style={expandibleArrow}
-        />
-        <Icon icon="image" /> {!sidebarCollapsed && t('imagings.label')}
-      </ListItem>
-      {splittedPath[1].includes('imaging') && expandedItem === 'imagings' && (
-        <List layout="flush" className="nav flex-column">
-          {permissions.includes(Permissions.RequestImaging) && (
-            <ListItem
-              className="nav-item"
-              style={listSubItemStyleNew}
-              onClick={() => navigateTo('/imaging/new')}
-              active={splittedPath[1].includes('imaging') && splittedPath.length > 2}
-            >
-              <Icon icon="add" style={iconMargin} />
-              {!sidebarCollapsed && t('imagings.requests.new')}
-            </ListItem>
-          )}
-          {permissions.includes(Permissions.ViewImagings) && (
-            <ListItem
-              className="nav-item"
-              style={listSubItemStyle}
-              onClick={() => navigateTo('/imaging')}
-              active={splittedPath[1].includes('imaging') && splittedPath.length < 3}
-            >
-              <Icon icon="image" style={iconMargin} />
-              {!sidebarCollapsed && t('imagings.requests.label')}
-            </ListItem>
-          )}
-        </List>
-      )}
-    </>
-  )
+  const getImagingLinks = () =>
+    enabledModules.includes(ModulePermissions.LabManagement) && (
+      <>
+        <ListItem
+          active={splittedPath[1].includes('imaging')}
+          onClick={() => {
+            navigateTo('/imaging')
+            setExpansion('imagings')
+          }}
+          className="nav-item"
+          style={listItemStyle}
+        >
+          <Icon
+            icon={
+              splittedPath[1].includes('imaging') && expandedItem === 'imagings'
+                ? 'down-arrow'
+                : 'right-arrow'
+            }
+            style={expandibleArrow}
+          />
+          <Icon icon="image" /> {!sidebarCollapsed && t('imagings.label')}
+        </ListItem>
+        {splittedPath[1].includes('imaging') && expandedItem === 'imagings' && (
+          <List layout="flush" className="nav flex-column">
+            {permissions.includes(Permissions.RequestImaging) && (
+              <ListItem
+                className="nav-item"
+                style={listSubItemStyleNew}
+                onClick={() => navigateTo('/imaging/new')}
+                active={splittedPath[1].includes('imaging') && splittedPath.length > 2}
+              >
+                <Icon icon="add" style={iconMargin} />
+                {!sidebarCollapsed && t('imagings.requests.new')}
+              </ListItem>
+            )}
+            {permissions.includes(Permissions.ViewImagings) && (
+              <ListItem
+                className="nav-item"
+                style={listSubItemStyle}
+                onClick={() => navigateTo('/imaging')}
+                active={splittedPath[1].includes('imaging') && splittedPath.length < 3}
+              >
+                <Icon icon="image" style={iconMargin} />
+                {!sidebarCollapsed && t('imagings.requests.label')}
+              </ListItem>
+            )}
+          </List>
+        )}
+      </>
+    )
 
   return (
     <nav
