@@ -5,6 +5,7 @@ export default {
         message: {
           required: 'Missing required fields.',
           incorrect: 'Incorrect username or password.',
+          serverNotResponding: 'Server not responding. Try again later.',
         },
         username: {
           required: 'Username is required.',

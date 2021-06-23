@@ -16,6 +16,7 @@ export interface UserState {
   permissions: (Permissions | null)[]
   user?: User | null
   loginError?: LoginError
+  modules: string[]
 }
 
 // const initialState: UserState = {
@@ -96,6 +97,13 @@ const initialState: UserState = {
     // new permissions added below
     Permissions.AddMedicine,
   ],
+  modules: [],
+}
+
+interface UserConfiguration {
+  modules: {
+    enabled: string[]
+  }
 }
 
 const userSlice = createSlice({
@@ -107,10 +115,17 @@ const userSlice = createSlice({
     },
     loginSuccess(
       state,
-      { payload }: PayloadAction<{ user: User; permissions: (Permissions | null)[] }>,
+      {
+        payload,
+      }: PayloadAction<{
+        user: User
+        permissions: (Permissions | null)[]
+        modules: string[]
+      }>,
     ) {
       state.user = payload.user
-      state.permissions = initialState.permissions
+      state.permissions = payload.permissions
+      state.modules = payload.modules
     },
     loginError(state, { payload }: PayloadAction<LoginError>) {
       state.loginError = payload
@@ -136,15 +151,21 @@ export const getCurrentSession = (username: string): AppThunk => async (dispatch
         familyName: (user as any).metadata.familyName,
       },
       permissions: initialState.permissions,
+      modules: initialState.modules,
     }),
   )
 }
 
 export const login = (username: string, password: string): AppThunk => async (dispatch) => {
+  // configure remoteDb for user
+  DbService.configureForUser(username, password)
+  // login
   const remoteDb = DbService.getServerDb()
   try {
     const response = await remoteDb.logIn(username, password)
     // const user = await remoteDb.getUser(response.name)
+    const config = await remoteDb.get<UserConfiguration>('user_ui_configuration')
+    DbService.startSyncing()
     dispatch(
       loginSuccess({
         user: {
@@ -154,14 +175,22 @@ export const login = (username: string, password: string): AppThunk => async (di
           // familyName: (user as any).metadata.familyName,
         },
         permissions: initialState.permissions,
+        modules: config.modules.enabled,
       }),
     )
   } catch (error) {
-    if (!username || !password) {
+    DbService.teardownServerDb()
+    if (!username) {
       dispatch(
         loginError({
           message: 'user.login.error.message.required',
           username: 'user.login.error.username.required',
+        }),
+      )
+    } else if (!password) {
+      dispatch(
+        loginError({
+          message: 'user.login.error.message.required',
           password: 'user.login.error.password.required',
         }),
       )
@@ -169,6 +198,12 @@ export const login = (username: string, password: string): AppThunk => async (di
       dispatch(
         loginError({
           message: 'user.login.error.message.incorrect',
+        }),
+      )
+    } else if (error.status === 404) {
+      dispatch(
+        loginError({
+          message: 'user.login.error.message.serverNotResponding',
         }),
       )
     }

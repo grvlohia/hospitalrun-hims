@@ -18,7 +18,9 @@ import Appointments from './scheduling/appointments/Appointments'
 import Settings from './settings/Settings'
 import Navbar from './shared/components/navbar/Navbar'
 import { NetworkStatusMessage } from './shared/components/network-status'
+import PrivateRoute from './shared/components/PrivateRoute'
 import Sidebar from './shared/components/Sidebar'
+import ModulePermissions from './shared/model/ModulePermissions'
 import { RootState } from './shared/store'
 import LoginPage from './user/view/LoginPage'
 import UserManagement from './userManagement/UserManagement'
@@ -26,6 +28,7 @@ import UserManagement from './userManagement/UserManagement'
 const HospitalRun = () => {
   const { title } = useTitle()
   const { sidebarCollapsed } = useSelector((state: RootState) => state.components)
+  const enabledModules = useSelector((state: RootState) => state.user.modules)
 
   return (
     <div>
@@ -51,15 +54,40 @@ const HospitalRun = () => {
               <div>
                 <Switch>
                   <Route exact path="/" component={Dashboard} />
-                  <Route path="/appointments" component={Appointments} />
-                  <Route path="/patients" component={Patients} />
-                  <Route path="/labs" component={Labs} />
                   <Route path="/medications" component={Medications} />
                   <Route path="/incidents" component={Incidents} />
                   <Route path="/settings" component={Settings} />
-                  <Route path="/imaging" component={Imagings} />
                   <Route path="/login" component={LoginPage} />
-                  <Route path="/usermanagement" component={UserManagement} />
+                  <PrivateRoute
+                    exact
+                    isAuthenticated={enabledModules.includes(ModulePermissions.Registration)}
+                    path="/appointments"
+                    component={Appointments}
+                  />
+                  <PrivateRoute
+                    isAuthenticated={enabledModules.includes('patient')}
+                    exact
+                    path="/patients"
+                    component={Patients}
+                  />
+                  <PrivateRoute
+                    exact
+                    isAuthenticated={enabledModules.includes(ModulePermissions.LabManagement)}
+                    path="/labs"
+                    component={Labs}
+                  />
+                  <PrivateRoute
+                    exact
+                    isAuthenticated={enabledModules.includes(ModulePermissions.LabManagement)}
+                    path="/imaging"
+                    component={Imagings}
+                  />
+                  <PrivateRoute
+                    exact
+                    isAuthenticated={enabledModules.includes(ModulePermissions.UserManagement)}
+                    path="/usermanagement"
+                    component={UserManagement}
+                  />
                 </Switch>
               </div>
               <Toaster autoClose={5000} hideProgressBar draggable />

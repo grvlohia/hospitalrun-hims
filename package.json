@@ -9,6 +9,7 @@
     "@types/escape-string-regexp": "~2.0.1",
     "@types/json2csv": "~5.0.1",
     "@types/pouchdb-find": "~6.3.4",
+    "axios": "~0.21.1",
     "bootstrap": "~4.6.0",
     "cross-env": "~7.0.3",
     "date-fns": "~2.19.0",
