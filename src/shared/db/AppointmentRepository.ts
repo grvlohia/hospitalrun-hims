@@ -17,6 +17,7 @@ class AppointmentRepository extends Repository<Appointment> {
 
   // Fuzzy search for patient appointments. Used for patient appointment search bar
   async searchPatientAppointments(patientId: string, text: string): Promise<Appointment[]> {
+    super.refreshRelationalDb()
     const escapedString = escapeStringRegexp(text)
     return super.search({
       selector: {

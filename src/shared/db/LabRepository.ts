@@ -17,6 +17,7 @@ class LabRepository extends Repository<Lab> {
   }
 
   async search(container: SearchContainer): Promise<Lab[]> {
+    super.refreshRelationalDb()
     const searchValue = { $regex: RegExp(container.text, 'i') }
     const selector = {
       $and: [
@@ -41,12 +42,14 @@ class LabRepository extends Repository<Lab> {
   }
 
   async save(entity: Lab): Promise<Lab> {
+    super.refreshRelationalDb()
     const labCode = generateCode('L')
     entity.code = labCode
     return super.save(entity)
   }
 
   async findAllByPatientId(patientId: string): Promise<Lab[]> {
+    super.refreshRelationalDb()
     return super.search({
       selector: {
         $and: [

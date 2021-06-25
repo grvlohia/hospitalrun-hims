@@ -18,6 +18,7 @@ class ImagingRepository extends Repository<Imaging> {
   }
 
   async search(container: SearchContainer): Promise<Imaging[]> {
+    super.refreshRelationalDb()
     const searchValue = { $regex: RegExp(container.text, 'i') }
     const selector = {
       $and: [
@@ -42,6 +43,7 @@ class ImagingRepository extends Repository<Imaging> {
   }
 
   async save(entity: Imaging): Promise<Imaging> {
+    super.refreshRelationalDb()
     const imagingCode = generateCode('I')
     entity.code = imagingCode
     return super.save(entity)

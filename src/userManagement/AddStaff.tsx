@@ -76,8 +76,8 @@ const AddStaff = () => {
         <Row>
           <Column>
             <TextInputWithLabelFormGroup
-              label="Mobile"
-              name="mobile"
+              label="Primary Mobile"
+              name="primaryMobile"
               isRequired
               onChange={(e) => setPrimaryMobile(e.target.value)}
               value={primaryMobile}
@@ -88,7 +88,7 @@ const AddStaff = () => {
         <Row>
           <Column>
             <TextInputWithLabelFormGroup
-              label="Priamry Email"
+              label="Primary Email"
               name="primaryEmail"
               isRequired
               onChange={(e) => setPrimaryEmail(e.target.value)}

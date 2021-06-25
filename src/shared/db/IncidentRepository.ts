@@ -14,6 +14,7 @@ class IncidentRepository extends Repository<Incident> {
   }
 
   async search(options: SearchOptions): Promise<Incident[]> {
+    super.refreshRelationalDb()
     return super.search(IncidentRepository.getSearchCriteria(options))
   }
 
