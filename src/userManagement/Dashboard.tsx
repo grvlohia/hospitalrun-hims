@@ -1,16 +1,29 @@
 import { Column, Container, Icon, Row } from '@hospitalrun/components'
 import { IconType } from '@hospitalrun/components/dist/components/Icon/interfaces'
-import React, { CSSProperties } from 'react'
+import React, { CSSProperties, useEffect } from 'react'
 import { Card } from 'react-bootstrap'
 import { useHistory } from 'react-router'
+
+import useAddBreadcrumbs from '../page-header/breadcrumbs/useAddBreadcrumbs'
+import { useUpdateTitle } from '../page-header/title/TitleContext'
+import useTranslator from '../shared/hooks/useTranslator'
 
 interface Feature {
   icon: IconType
   title: string
   path: string
 }
+
+const breadcrumbs = [{ i18nKey: 'administration.dashboard', location: '/administration' }]
 const Dashboard = () => {
+  const { t } = useTranslator()
   const history = useHistory()
+  const updateTitle = useUpdateTitle()
+  useAddBreadcrumbs(breadcrumbs, false)
+
+  useEffect(() => {
+    updateTitle(t('administration.label'))
+  })
   const navigateTo = (location: string) => {
     history.push(location)
   }
@@ -18,12 +31,12 @@ const Dashboard = () => {
     {
       icon: 'patient-add',
       title: 'Create New Staff',
-      path: '/usermanagement/addStaff',
+      path: '/administration/addStaff',
     },
     {
       icon: 'patient-remove',
       title: 'Remove Staff Member',
-      path: '/usermanagement/removeStaff',
+      path: '/administration/removeStaff',
     },
   ]
 

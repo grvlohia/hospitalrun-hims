@@ -23,7 +23,7 @@ import Sidebar from './shared/components/Sidebar'
 import ModulePermissions from './shared/model/ModulePermissions'
 import { RootState } from './shared/store'
 import LoginPage from './user/view/LoginPage'
-import UserManagement from './userManagement/UserManagement'
+import Administration from './userManagement/Administration'
 
 const HospitalRun = () => {
   const { title } = useTitle()
@@ -59,34 +59,29 @@ const HospitalRun = () => {
                   <Route path="/settings" component={Settings} />
                   <Route path="/login" component={LoginPage} />
                   <PrivateRoute
-                    exact
                     isAuthenticated={enabledModules.includes(ModulePermissions.Registration)}
                     path="/appointments"
                     component={Appointments}
                   />
                   <PrivateRoute
                     isAuthenticated={enabledModules.includes('patient')}
-                    exact
                     path="/patients"
                     component={Patients}
                   />
                   <PrivateRoute
-                    exact
                     isAuthenticated={enabledModules.includes(ModulePermissions.LabManagement)}
                     path="/labs"
                     component={Labs}
                   />
                   <PrivateRoute
-                    exact
                     isAuthenticated={enabledModules.includes(ModulePermissions.LabManagement)}
                     path="/imaging"
                     component={Imagings}
                   />
                   <PrivateRoute
-                    exact
                     isAuthenticated={enabledModules.includes(ModulePermissions.UserManagement)}
-                    path="/usermanagement"
-                    component={UserManagement}
+                    path="/administration"
+                    component={Administration}
                   />
                 </Switch>
               </div>

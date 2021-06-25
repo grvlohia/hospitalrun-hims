@@ -5,8 +5,6 @@ import SortRequest, { Unsorted } from '../shared/db/SortRequest'
 import Patient from '../shared/model/Patient'
 import { AppThunk } from '../shared/store'
 
-const patientRepository = new PatientRepository()
-
 interface PatientsState {
   isLoading: boolean
   patients: Patient[]
@@ -44,7 +42,7 @@ export const fetchPatients = (sortRequest: SortRequest = Unsorted): AppThunk => 
   dispatch,
 ) => {
   dispatch(fetchPatientsStart())
-  const patients = await patientRepository.findAll(sortRequest)
+  const patients = await PatientRepository.findAll(sortRequest)
   dispatch(fetchPatientsSuccess(patients))
 }
 
@@ -53,11 +51,11 @@ export const searchPatients = (searchString: string): AppThunk => async (dispatc
 
   let patients
   if (searchString.trim() === '') {
-    patients = await patientRepository.findAll()
+    patients = await PatientRepository.findAll()
   } else {
-    patients = await patientRepository.search(searchString)
+    patients = await PatientRepository.search(searchString)
   }
-  const count = await patientRepository.count()
+  const count = await PatientRepository.count()
   dispatch(fetchCountSuccess(count))
   dispatch(fetchPatientsSuccess(patients))
 }

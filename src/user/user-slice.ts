@@ -165,6 +165,9 @@ export const login = (username: string, password: string): AppThunk => async (di
     const response = await remoteDb.logIn(username, password)
     // const user = await remoteDb.getUser(response.name)
     const config = await remoteDb.get<UserConfiguration>('user_ui_configuration')
+    // check if the logged in user is same as previous logged in user
+    // if not same then destroy and recreate localDb
+    await DbService.recreateLocalDb()
     DbService.startSyncing()
     dispatch(
       loginSuccess({
@@ -214,7 +217,7 @@ export const logout = (): AppThunk => async (dispatch) => {
   const remoteDb = DbService.getServerDb()
   if (remoteDb) {
     await remoteDb.logOut()
-    DbService.destroyLocalDb()
+    // DbService.destroyLocalDb()
     dispatch(logoutSuccess())
   }
 }

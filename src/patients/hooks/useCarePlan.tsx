@@ -3,10 +3,8 @@ import { useQuery } from 'react-query'
 import PatientRepository from '../../shared/db/PatientRepository'
 import CarePlan from '../../shared/model/CarePlan'
 
-const patientRepository = new PatientRepository()
-
 async function getCarePlan(_: string, patientId: string, allergyId: string): Promise<CarePlan> {
-  const patient = await patientRepository.find(patientId)
+  const patient = await PatientRepository.find(patientId)
   const maybeCarePlan = patient.carePlans?.find((a) => a.id === allergyId)
   if (!maybeCarePlan) {
     throw new Error('Care Plan not found')

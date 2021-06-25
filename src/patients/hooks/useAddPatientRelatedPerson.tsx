@@ -6,8 +6,6 @@ import RelatedPerson from '../../shared/model/RelatedPerson'
 import { uuid } from '../../shared/util/uuid'
 import validateRelatedPerson from '../util/validate-related-person'
 
-const patientRepository = new PatientRepository()
-
 interface AddRelatedPersonRequest {
   patientId: string
   relatedPerson: Omit<RelatedPerson, 'id'>
@@ -17,7 +15,7 @@ async function addRelatedPerson(request: AddRelatedPersonRequest): Promise<Relat
   const error = validateRelatedPerson(request.relatedPerson)
 
   if (isEmpty(error)) {
-    const patient = await patientRepository.find(request.patientId)
+    const patient = await PatientRepository.find(request.patientId)
     const relatedPersons = patient.relatedPersons ? [...patient.relatedPersons] : []
     const newRelated: RelatedPerson = {
       id: uuid(),
@@ -25,7 +23,7 @@ async function addRelatedPerson(request: AddRelatedPersonRequest): Promise<Relat
     }
     relatedPersons.push(newRelated)
 
-    await patientRepository.saveOrUpdate({
+    await PatientRepository.saveOrUpdate({
       ...patient,
       relatedPersons,
     })
@@ -41,7 +39,7 @@ export default function useAddPatientRelatedPerson() {
     onSuccess: async (data, variables) => {
       const relatedPersons = await Promise.all(
         data.map(async (rp) => {
-          const patient = await patientRepository.find(rp.patientId)
+          const patient = await PatientRepository.find(rp.patientId)
           return { ...patient, type: rp.type }
         }),
       )

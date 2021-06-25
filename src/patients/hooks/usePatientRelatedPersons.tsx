@@ -3,8 +3,6 @@ import { useQuery } from 'react-query'
 import PatientRepository from '../../shared/db/PatientRepository'
 import Patient from '../../shared/model/Patient'
 
-const patientRepository = new PatientRepository()
-
 interface RelatedPersonsResult extends Patient {
   type: string
 }
@@ -13,11 +11,11 @@ async function fetchPatientRelatedPersons(
   _: any,
   patientId: string,
 ): Promise<RelatedPersonsResult[]> {
-  const patient = await patientRepository.find(patientId)
+  const patient = await PatientRepository.find(patientId)
   const relatedPersons = patient.relatedPersons || []
   const result = await Promise.all(
     relatedPersons.map(async (person) => {
-      const fetchedRelatedPerson = await patientRepository.find(person.patientId)
+      const fetchedRelatedPerson = await PatientRepository.find(person.patientId)
       return { ...fetchedRelatedPerson, type: person.type }
     }),
   )

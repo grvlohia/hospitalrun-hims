@@ -4,15 +4,13 @@ import PatientRepository from '../../shared/db/PatientRepository'
 import Diagnosis from '../../shared/model/Diagnosis'
 import Visit from '../../shared/model/Visit'
 
-const patientRepository = new PatientRepository()
-
 interface DeleteDiagnosisRequest {
   patientId: string
   diagnosis: Diagnosis
 }
 
 const deleteDiagnosis = async (request: DeleteDiagnosisRequest) => {
-  const patient = await patientRepository.find(request.patientId)
+  const patient = await PatientRepository.find(request.patientId)
   const visits = JSON.parse(JSON.stringify(patient.visits)) as Visit[]
   const visit = visits.find(({ id }) => id === request.diagnosis.visit)
   if (!visit) {
@@ -25,7 +23,7 @@ const deleteDiagnosis = async (request: DeleteDiagnosisRequest) => {
   const updatedDiagnoses = diagnoses.filter((diagnosis) => diagnosis.id !== request.diagnosis.id)
   diagnoses = updatedDiagnoses
   visit.diagnoses = diagnoses
-  await patientRepository.saveOrUpdate({ ...patient, visits })
+  await PatientRepository.saveOrUpdate({ ...patient, visits })
   return updatedDiagnoses
 }
 

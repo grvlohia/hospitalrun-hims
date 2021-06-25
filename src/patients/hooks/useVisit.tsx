@@ -3,14 +3,12 @@ import { useQuery } from 'react-query'
 import PatientRepository from '../../shared/db/PatientRepository'
 import Visit from '../../shared/model/Visit'
 
-const patientRepository = new PatientRepository()
-
 async function fetchVisit(
   _: string,
   patientId: string,
   visitsId: string,
 ): Promise<Visit | undefined> {
-  const { visits } = await patientRepository.find(patientId)
+  const { visits } = await PatientRepository.find(patientId)
   return visits.find(({ id }) => id === visitsId) || undefined
 }
 

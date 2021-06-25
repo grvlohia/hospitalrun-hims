@@ -6,8 +6,6 @@ import CareGoal from '../../shared/model/CareGoal'
 import { uuid } from '../../shared/util/uuid'
 import validateCareGoal from '../util/validate-caregoal'
 
-const patientRepository = new PatientRepository()
-
 interface AddCareGoalRequest {
   patientId: string
   careGoal: Omit<CareGoal, 'id' | 'createdOn'>
@@ -17,7 +15,7 @@ async function addCareGoal(request: AddCareGoalRequest): Promise<CareGoal[]> {
   const error = validateCareGoal(request.careGoal)
 
   if (isEmpty(error)) {
-    const patient = await patientRepository.find(request.patientId)
+    const patient = await PatientRepository.find(request.patientId)
     const careGoals = patient.careGoals ? [...patient.careGoals] : []
 
     const newCareGoal: CareGoal = {
@@ -27,7 +25,7 @@ async function addCareGoal(request: AddCareGoalRequest): Promise<CareGoal[]> {
     }
     careGoals.push(newCareGoal)
 
-    await patientRepository.saveOrUpdate({
+    await PatientRepository.saveOrUpdate({
       ...patient,
       careGoals,
     })

@@ -63,10 +63,13 @@ class DbService {
 
   replicationObj: PouchDB.Replication.Sync<any> | null
 
+  localDbRecreated: boolean
+
   constructor() {
     this.localDb = new PouchDB('local_innohims').setSchema(schema)
     this.serverDb = null
     this.replicationObj = null
+    this.localDbRecreated = false
   }
 
   public teardownServerDb() {
@@ -91,11 +94,6 @@ class DbService {
         password,
       },
     })
-
-    // this.replicationObj = this.localDb.sync(this.serverDb, {
-    //   live: true,
-    //   retry: true,
-    // })
   }
 
   public startSyncing() {
@@ -119,9 +117,10 @@ class DbService {
     return this.serverDb
   }
 
-  public async destroyLocalDb() {
+  public async recreateLocalDb() {
     await this.localDb.destroy()
     this.localDb = new PouchDB('local_innohims').setSchema(schema)
+    this.localDbRecreated = true
   }
 }
 

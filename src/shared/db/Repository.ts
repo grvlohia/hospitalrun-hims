@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { schema } from '../config/pouchdb'
+import DbService, { schema } from '../config/pouchdb'
 import AbstractDBModel from '../model/AbstractDBModel'
 import SortRequest, { Unsorted } from './SortRequest'
 
@@ -17,13 +17,19 @@ export default class Repository<T extends AbstractDBModel> {
     this.pluralType = schema.find((s) => s.singular === this.type)?.plural || ''
   }
 
+  async refreshRelationalDb() {
+    this.db = DbService.getLocalDb()
+  }
+
   async find(id: string): Promise<T> {
+    this.refreshRelationalDb()
     const documents = await this.db.rel.find(this.type, id)
     const entity = documents[this.pluralType][0]
     return entity
   }
 
   async findAll(sort = Unsorted): Promise<T[]> {
+    this.refreshRelationalDb()
     const selector: any = {
       _id: {
         $regex: RegExp(this.type, 'i'),
@@ -68,6 +74,7 @@ export default class Repository<T extends AbstractDBModel> {
   }
 
   async search(criteria: any): Promise<T[]> {
+    this.refreshRelationalDb()
     const response = await this.db.find({
       selector: {
         $and: [
@@ -85,6 +92,7 @@ export default class Repository<T extends AbstractDBModel> {
   }
 
   async save(entity: T): Promise<T> {
+    this.refreshRelationalDb()
     const currentTime = new Date().toISOString()
 
     const { id, rev, ...valuesToSave } = entity
@@ -98,6 +106,7 @@ export default class Repository<T extends AbstractDBModel> {
   }
 
   async saveOrUpdate(entity: T): Promise<T> {
+    this.refreshRelationalDb()
     if (!entity.id) {
       return this.save(entity)
     }
@@ -121,6 +130,7 @@ export default class Repository<T extends AbstractDBModel> {
   }
 
   async delete(entity: T): Promise<T> {
+    this.refreshRelationalDb()
     const entityToDelete = await this.find(entity.id)
     await this.db.rel.del(this.type, entity)
     return entityToDelete

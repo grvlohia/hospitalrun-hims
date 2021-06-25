@@ -102,15 +102,15 @@ const Sidebar = () => {
     enabledModules.includes(ModulePermissions.UserManagement) && (
       <>
         <ListItem
-          active={pathname === '/usermanagement'}
+          active={pathname === '/administration'}
           onClick={() => {
-            navigateTo('/usermanagement')
+            navigateTo('/administration')
             setExpansion('none')
           }}
           className="nav-item"
           style={listItemStyle}
         >
-          <Icon icon="admin" /> {!sidebarCollapsed && 'User Management'}
+          <Icon icon="admin" /> {!sidebarCollapsed && 'Administration'}
         </ListItem>
       </>
     )

@@ -6,8 +6,6 @@ import CarePlan from '../../shared/model/CarePlan'
 import { uuid } from '../../shared/util/uuid'
 import validateCarePlan from '../util/validate-careplan'
 
-const patientRepository = new PatientRepository()
-
 interface AddCarePlanRequest {
   patientId: string
   carePlan: Omit<CarePlan, 'id' | 'createdOn'>
@@ -17,7 +15,7 @@ async function addCarePlan(request: AddCarePlanRequest): Promise<CarePlan[]> {
   const error = validateCarePlan(request.carePlan)
 
   if (isEmpty(error)) {
-    const patient = await patientRepository.find(request.patientId)
+    const patient = await PatientRepository.find(request.patientId)
     const carePlans = patient.carePlans ? [...patient.carePlans] : []
 
     const newCarePlan: CarePlan = {
@@ -27,7 +25,7 @@ async function addCarePlan(request: AddCarePlanRequest): Promise<CarePlan[]> {
     }
     carePlans.push(newCarePlan)
 
-    await patientRepository.saveOrUpdate({
+    await PatientRepository.saveOrUpdate({
       ...patient,
       carePlans,
     })

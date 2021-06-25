@@ -14,8 +14,6 @@ import Patient from '../../shared/model/Patient'
 import useReportIncident from '../hooks/useReportIncident'
 import { IncidentError } from '../util/validate-incident'
 
-const patientRepository = new PatientRepository()
-
 const ReportIncident = () => {
   const [mutate] = useReportIncident()
   const history = useHistory()
@@ -159,7 +157,7 @@ const ReportIncident = () => {
               id="patientTypeahead"
               placeholder={t('incidents.reports.patient')}
               onChange={(p: Patient[]) => onPatientChange(p[0])}
-              onSearch={async (query: string) => patientRepository.search(query)}
+              onSearch={async (query: string) => PatientRepository.search(query)}
               searchAccessor="fullName"
               renderMenuItemChildren={(p: Patient) => <div>{`${p.fullName} (${p.code})`}</div>}
             />

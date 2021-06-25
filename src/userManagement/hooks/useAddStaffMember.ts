@@ -6,8 +6,10 @@ import { uuid } from '../../shared/util/uuid'
 
 interface AddStaffRequest {
   loginName: string
-  permissions: string[]
+  roles: string[]
   user: User
+  primaryEmail: string
+  primaryMobile: string
 }
 
 const addStaffMember = async (request: AddStaffRequest) => {
@@ -20,9 +22,11 @@ const addStaffMember = async (request: AddStaffRequest) => {
         sourceDb: userDbString,
         type: 'create_staff',
         loginName: request.loginName,
+        primaryEmail: request.primaryEmail,
+        primaryMobile: request.primaryMobile,
+        roles: request.roles,
         domain: process.env.REACT_APP_TENANT_DOMAIN,
         tenantId: process.env.REACT_APP_TENANT_ID,
-        roles: request.permissions,
       },
     })
     return response

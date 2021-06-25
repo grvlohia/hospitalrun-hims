@@ -4,16 +4,14 @@ import PatientRepository from '../../shared/db/PatientRepository'
 import Patient from '../../shared/model/Patient'
 import PatientSearchRequest from '../models/PatientSearchRequest'
 
-const patientRepository = new PatientRepository()
-
 interface PatientsResult {
   totalCount: number
   patients: Patient[]
 }
 
 async function fetchPatients(_: any, searchRequest: PatientSearchRequest): Promise<PatientsResult> {
-  const patients = await patientRepository.search(searchRequest.queryString)
-  const totalCount = await patientRepository.count()
+  const patients = await PatientRepository.search(searchRequest.queryString)
+  const totalCount = await PatientRepository.count()
   return { totalCount, patients }
 }
 

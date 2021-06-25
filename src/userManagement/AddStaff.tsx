@@ -1,16 +1,26 @@
-import { Button, Column, Container, Row } from '@hospitalrun/components'
-import React, { useState } from 'react'
+import { Button, Column, Container, Label, Row } from '@hospitalrun/components'
+import React, { CSSProperties, useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import useAddBreadcrumbs from '../page-header/breadcrumbs/useAddBreadcrumbs'
 import TextInputWithLabelFormGroup from '../shared/components/input/TextInputWithLabelFormGroup'
 import Constants from '../shared/Constants'
 import { RootState } from '../shared/store'
 import useAddStaffMember from './hooks/useAddStaffMember'
 
+const breadcrumbs = [
+  { i18nKey: 'administration.dashboard', location: '/administration' },
+  { i18nKey: 'administration.addStaff', location: '/administration/addStaff' },
+]
+
 const AddStaff = () => {
+  useAddBreadcrumbs(breadcrumbs, false)
   const currentUser = useSelector((state: RootState) => state.user.user)
   const [mutate] = useAddStaffMember()
+
   const [loginName, setLoginName] = useState('')
+  const [primaryEmail, setPrimaryEmail] = useState('')
+  const [primaryMobile, setPrimaryMobile] = useState('')
   const [staffRoles, setStaffRoles] = useState(
     Object.entries(Constants.STAFF_ROLES).map((module) => ({
       label: module[0],
@@ -37,7 +47,14 @@ const AddStaff = () => {
   const onCreateStaff = async () => {
     const roles = staffRoles.filter((role) => role.checked).map((role) => role.value)
 
-    mutate({ loginName, permissions: roles, user: currentUser })
+    mutate({ loginName, roles, user: currentUser, primaryEmail, primaryMobile })
+  }
+
+  const staffRollCardStyle: CSSProperties = {
+    boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+    borderRadius: '0.25rem',
+    marginBottom: '15px',
+    padding: '10px',
   }
 
   return (
@@ -57,14 +74,40 @@ const AddStaff = () => {
           </Column>
         </Row>
         <Row>
+          <Column>
+            <TextInputWithLabelFormGroup
+              label="Mobile"
+              name="mobile"
+              isRequired
+              onChange={(e) => setPrimaryMobile(e.target.value)}
+              value={primaryMobile}
+              isEditable
+            />
+          </Column>
+        </Row>
+        <Row>
+          <Column>
+            <TextInputWithLabelFormGroup
+              label="Priamry Email"
+              name="primaryEmail"
+              isRequired
+              onChange={(e) => setPrimaryEmail(e.target.value)}
+              value={primaryEmail}
+              isEditable
+            />
+          </Column>
+        </Row>
+        <Label text="Roles" isRequired />
+        <Row>
           {staffRoles.map((role) => (
-            <Column lg={4} key={role.label}>
-              <div>
+            <Column lg={4} md={6} key={role.label}>
+              <div style={staffRollCardStyle}>
                 <input
                   type="checkbox"
                   value={role.value}
                   onChange={onPermissionChecked}
                   id={role.label}
+                  style={{ marginRight: '15px' }}
                 />
                 <label htmlFor={role.label}>{role.label}</label>
               </div>

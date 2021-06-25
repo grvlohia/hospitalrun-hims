@@ -18,6 +18,7 @@ class PatientRepository extends Repository<Patient> {
   }
 
   async search(text: string): Promise<Patient[]> {
+    super.refreshRelationalDb()
     const escapedString = escapeStringRegexp(text)
     return super.search({
       selector: {
@@ -36,6 +37,7 @@ class PatientRepository extends Repository<Patient> {
   }
 
   async save(entity: Patient): Promise<Patient> {
+    super.refreshRelationalDb()
     const patientCode = generateCode('P')
     entity.code = patientCode
     const saveResult = await super.save(entity)
@@ -43,25 +45,29 @@ class PatientRepository extends Repository<Patient> {
   }
 
   async createIndex() {
+    super.refreshRelationalDb()
     return this.db.createIndex({
       index: { fields: ['index'] },
     })
   }
 
   async getAppointments(patientId: string): Promise<Appointment[]> {
+    super.refreshRelationalDb()
     const result = await this.db.rel.findHasMany('appointment', 'patient', patientId)
     return result.appointments
   }
 
   async getLabs(patientId: string): Promise<Lab[]> {
+    super.refreshRelationalDb()
     const result = await this.db.rel.findHasMany('lab', 'patient', patientId)
     return result.labs
   }
 
   async getMedications(patientId: string): Promise<Medication[]> {
+    super.refreshRelationalDb()
     const result = await this.db.rel.findHasMany('medication', 'patient', patientId)
     return result.medications
   }
 }
 
-export default PatientRepository
+export default new PatientRepository()

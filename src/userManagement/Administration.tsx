@@ -5,19 +5,19 @@ import PrivateRoute from '../shared/components/PrivateRoute'
 import AddStaff from './AddStaff'
 import Dashboard from './Dashboard'
 
-const UserManagement = () => {
+const Administration = () => {
   const isAdmin = true
   return (
     <Switch>
-      <PrivateRoute isAuthenticated={isAdmin} exact path="/usermanagement" component={Dashboard} />
+      <PrivateRoute isAuthenticated={isAdmin} exact path="/administration" component={Dashboard} />
       <PrivateRoute
         isAuthenticated={isAdmin}
         exact
-        path="/usermanagement/addStaff"
+        path="/administration/addStaff"
         component={AddStaff}
       />
     </Switch>
   )
 }
 
-export default UserManagement
+export default Administration

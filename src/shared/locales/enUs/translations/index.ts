@@ -1,4 +1,5 @@
 import actions from './actions'
+import administration from './administration'
 import bloodType from './blood-type'
 import dashboard from './dashboard'
 import imagings from './imagings'
@@ -30,4 +31,5 @@ export default {
   ...user,
   ...bloodType,
   ...imagings,
+  ...administration,
 }

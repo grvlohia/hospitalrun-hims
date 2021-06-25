@@ -6,8 +6,6 @@ import Medication from '../shared/model/Medication'
 import Patient from '../shared/model/Patient'
 import { AppThunk } from '../shared/store'
 
-const patientRepository = new PatientRepository()
-
 interface Error {
   medication?: string
   patient?: string
@@ -84,7 +82,7 @@ export const {
 export const fetchMedication = (medicationId: string): AppThunk => async (dispatch) => {
   dispatch(fetchMedicationStart())
   const fetchedMedication = await MedicationRepository.find(medicationId)
-  const fetchedPatient = await patientRepository.find(fetchedMedication.patient)
+  const fetchedPatient = await PatientRepository.find(fetchedMedication.patient)
   dispatch(fetchMedicationSuccess({ medication: fetchedMedication, patient: fetchedPatient }))
 }
 
