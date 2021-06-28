@@ -1,3 +1,4 @@
+import { Constants } from '@innohealthtech/common-constants'
 import { useMutation } from 'react-query'
 
 import DbService from '../../shared/config/pouchdb'
@@ -20,7 +21,7 @@ const addStaffMember = async (request: AddStaffRequest) => {
       _id: uuid(),
       innodata: {
         sourceDb: userDbString,
-        type: 'create_staff',
+        type: Constants.replicationCommands.CREATE_STAFF,
         loginName: request.loginName,
         primaryEmail: request.primaryEmail,
         primaryMobile: request.primaryMobile,

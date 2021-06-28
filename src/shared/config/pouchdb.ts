@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable camelcase */
+import { CouchConstants } from '@innohealthtech/common-constants'
 import PouchDB from 'pouchdb'
 import PouchAuth from 'pouchdb-authentication'
 import PouchdbFind from 'pouchdb-find'
@@ -87,7 +88,7 @@ class DbService {
 
     const userDb = `userdb-${Buffer.from(username, 'utf-8').toString('hex')}`
 
-    this.serverDb = new PouchDB(`${process.env.REACT_APP_COUCHDB}/${userDb}`, {
+    this.serverDb = new PouchDB(`${CouchConstants.url()}/${userDb}`, {
       skip_setup: true,
       auth: {
         username,

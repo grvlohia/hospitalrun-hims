@@ -5,6 +5,7 @@
   "private": false,
   "dependencies": {
     "@hospitalrun/components": "~3.4.0",
+    "@innohealthtech/common-constants": "~0.0.6",
     "@reduxjs/toolkit": "~1.5.0",
     "@types/escape-string-regexp": "~2.0.1",
     "@types/json2csv": "~5.0.1",

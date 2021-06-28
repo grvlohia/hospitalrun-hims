@@ -1,10 +1,10 @@
 import { Button, Column, Container, Label, Row } from '@hospitalrun/components'
+import CommonConstants from '@innohealthtech/common-constants'
 import React, { CSSProperties, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import useAddBreadcrumbs from '../page-header/breadcrumbs/useAddBreadcrumbs'
 import TextInputWithLabelFormGroup from '../shared/components/input/TextInputWithLabelFormGroup'
-import Constants from '../shared/Constants'
 import { RootState } from '../shared/store'
 import useAddStaffMember from './hooks/useAddStaffMember'
 
@@ -22,9 +22,9 @@ const AddStaff = () => {
   const [primaryEmail, setPrimaryEmail] = useState('')
   const [primaryMobile, setPrimaryMobile] = useState('')
   const [staffRoles, setStaffRoles] = useState(
-    Object.entries(Constants.STAFF_ROLES).map((module) => ({
-      label: module[0],
-      value: module[1],
+    Object.entries(CommonConstants.Constants.STAFF_ROLES).map((elem) => ({
+      label: elem[0],
+      value: elem[1],
       checked: false,
     })),
   )

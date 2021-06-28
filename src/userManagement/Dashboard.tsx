@@ -34,9 +34,9 @@ const Dashboard = () => {
       path: '/administration/addStaff',
     },
     {
-      icon: 'patient-remove',
-      title: 'Remove Staff Member',
-      path: '/administration/removeStaff',
+      icon: 'edit',
+      title: 'Edit Staff Member',
+      path: '/administration/editStaff',
     },
   ]
 
