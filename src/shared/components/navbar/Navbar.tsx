@@ -58,9 +58,6 @@ const Navbar = () => {
     ? [
         {
           type: 'link',
-          // label: `${t('user.login.currentlySignedInAs')} ${user?.givenName} ${
-          //   user?.familyName
-          // }`,
           label: `${t('user.login.currentlySignedInAs')} ${user.username}`,
           onClick: () => {
             navigateTo('/settings')

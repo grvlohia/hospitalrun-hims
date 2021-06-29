@@ -5,14 +5,12 @@ import { useHistory } from 'react-router-dom'
 
 import useTranslator from '../../shared/hooks/useTranslator'
 import Allergy from '../../shared/model/Allergy'
-// import Diagnosis from '../../shared/model/Diagnosis'
 import Patient from '../../shared/model/Patient'
 import Permissions from '../../shared/model/Permissions'
 import { RootState } from '../../shared/store'
 import { formatDate } from '../../shared/util/formatDate'
 import NewAllergyModal from '../allergies/NewAllergyModal'
 import AddCarePlanModal from '../care-plans/AddCarePlanModal'
-// import AddDiagnosisModal from '../diagnoses/AddDiagnosisModal'
 import usePatientAllergies from '../hooks/usePatientAllergies'
 import AddVisitModal from '../visits/AddVisitModal'
 
@@ -35,7 +33,6 @@ const ImportantPatientInfo = (props: Props) => {
   const history = useHistory()
   const { permissions } = useSelector((state: RootState) => state.user)
   const [showNewAllergyModal, setShowNewAllergyModal] = useState(false)
-  // const [showDiagnosisModal, setShowDiagnosisModal] = useState(false)
   const [showAddCarePlanModal, setShowAddCarePlanModal] = useState(false)
   const [showAddVisitModal, setShowAddVisitModal] = useState(false)
   const { data, status } = usePatientAllergies(patient.id)
@@ -63,7 +60,6 @@ const ImportantPatientInfo = (props: Props) => {
     flexDirection: 'column',
     position: 'relative',
     color: 'black',
-    // backgroundColor: 'rgba(245,245,245,1)',
     fontSize: 'small',
     textAlign: 'center',
     justifyContent: 'center',
@@ -189,38 +185,6 @@ const ImportantPatientInfo = (props: Props) => {
           )}
         </div>
 
-        {/* <div className="col diagnoses-section" style={middleRowSectionStyle}>
-          <Typography variant="h5">{t('patient.diagnoses.label')}</Typography>
-          <div className="border border-primary" style={tableContainerStyle}>
-            <Table
-              tableClassName="table table-hover table-sm m-0"
-              onRowClick={() => history.push(`/patients/${patient.id}/diagnoses`)}
-              getID={(row) => row.id}
-              columns={[
-                { label: t('patient.diagnoses.diagnosisName'), key: 'name' },
-                {
-                  label: t('patient.diagnoses.diagnosisDate'),
-                  key: 'diagnosisDate',
-                  formatter: (row) => formatDate(row.diagnosisDate),
-                },
-                { label: t('patient.diagnoses.status'), key: 'status' },
-              ]}
-              data={patient.diagnoses ? (patient.diagnoses as Diagnosis[]) : []}
-            />
-          </div>
-          {permissions.includes(Permissions.AddDiagnosis) && (
-            <Button
-              size="small"
-              color="primary"
-              icon="add"
-              iconLocation="left"
-              onClick={() => setShowDiagnosisModal(true)}
-            >
-              {t('patient.diagnoses.new')}
-            </Button>
-          )}
-        </div> */}
-
         <div className="col carePlan-section" style={middleRowSectionStyle}>
           <Typography variant="h5">{t('patient.carePlan.label')}</Typography>
           <div className="border border-primary" style={tableContainerStyle}>
@@ -264,12 +228,6 @@ const ImportantPatientInfo = (props: Props) => {
         onCloseButtonClick={() => setShowNewAllergyModal(false)}
         patientId={patient.id}
       />
-
-      {/* <AddDiagnosisModal
-        show={showDiagnosisModal}
-        onCloseButtonClick={() => setShowDiagnosisModal(false)}
-        patient={patient}
-      /> */}
 
       <AddCarePlanModal
         show={showAddCarePlanModal}

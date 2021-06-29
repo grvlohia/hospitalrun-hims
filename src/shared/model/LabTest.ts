@@ -6,9 +6,9 @@ export enum LabTestStatus {
 
 export default interface LabTest {
   id: string
-  code: string // L-<code>
+  code: string
   patientId: string
-  name: string // name of the test. e.g. X-Ray
+  name: string
   description?: string
   status: LabTestStatus
   visitId: string

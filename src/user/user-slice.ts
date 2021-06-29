@@ -19,48 +19,6 @@ export interface UserState {
   modules: string[]
 }
 
-// const initialState: UserState = {
-//   user: {
-//     givenName: 'HospitalRun',
-//     familyName: 'Test',
-//     fullName: 'HospitalRun Test',
-//     id: 'test-hospitalrun',
-//   },
-//   permissions: [
-//     Permissions.ReadPatients,
-//     Permissions.WritePatients,
-//     Permissions.ReadAppointments,
-//     Permissions.WriteAppointments,
-//     Permissions.DeleteAppointment,
-//     Permissions.AddAllergy,
-//     Permissions.AddDiagnosis,
-//     Permissions.ViewLabs,
-//     Permissions.ViewLab,
-//     Permissions.RequestLab,
-//     Permissions.CompleteLab,
-//     Permissions.CancelLab,
-//     Permissions.ViewIncident,
-//     Permissions.ViewIncidents,
-//     Permissions.ReportIncident,
-//     Permissions.ResolveIncident,
-//     Permissions.ViewIncidentWidgets,
-//     Permissions.AddCarePlan,
-//     Permissions.ReadCarePlan,
-//     Permissions.AddCareGoal,
-//     Permissions.ReadCareGoal,
-//     Permissions.RequestMedication,
-//     Permissions.CompleteMedication,
-//     Permissions.CancelMedication,
-//     Permissions.ViewMedications,
-//     Permissions.ViewMedication,
-//     Permissions.AddVisit,
-//     Permissions.ReadVisits,
-//     Permissions.ViewImagings,
-//     Permissions.RequestImaging,
-//     // new permissions added below
-//     Permissions.AddMedicine,
-//   ],
-// }
 const initialState: UserState = {
   user: null,
   permissions: [
@@ -165,8 +123,6 @@ export const login = (username: string, password: string): AppThunk => async (di
     const response = await remoteDb.logIn(username, password)
     // const user = await remoteDb.getUser(response.name)
     const config = await remoteDb.get<UserConfiguration>('user_ui_configuration')
-    // check if the logged in user is same as previous logged in user
-    // if not same then destroy and recreate localDb
     await DbService.recreateLocalDb()
     DbService.startSyncing()
     dispatch(
@@ -174,8 +130,6 @@ export const login = (username: string, password: string): AppThunk => async (di
         user: {
           id: `org.couchdb.user:${response.name}`,
           username: response.name,
-          // givenName: (user as any).metadata.givenName,
-          // familyName: (user as any).metadata.familyName,
         },
         permissions: initialState.permissions,
         modules: config.modules.enabled,
@@ -217,7 +171,6 @@ export const logout = (): AppThunk => async (dispatch) => {
   const remoteDb = DbService.getServerDb()
   if (remoteDb) {
     await remoteDb.logOut()
-    // DbService.destroyLocalDb()
     dispatch(logoutSuccess())
   }
 }

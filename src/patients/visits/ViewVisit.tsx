@@ -3,8 +3,6 @@ import { useParams } from 'react-router-dom'
 
 import Loading from '../../shared/components/Loading'
 import useVisit from '../hooks/useVisit'
-// import VisitForm from './VisitForm'
-// import VisitDetails from './VisitDetails'
 
 interface Props {
   patientId: string
@@ -21,8 +19,6 @@ const ViewVisit = ({ patientId }: Props) => {
   return (
     <>
       <h2>{visit.reason}</h2>
-      {/* <VisitForm visit={visit} disabled /> */}
-      {/* <VisitDetails visit={visit} patientId={patientId} /> */}
       <h1>VisitForm here</h1>
     </>
   )

@@ -272,12 +272,6 @@ const VisitForm = (props: Props) => {
               <h6>{carePlan.title}</h6>
             </div>
           </Column>
-          {/* <div className="col-3">
-            <div style={headerInfoStyle}>
-              <strong>{t('patient.code')}</strong>
-              <h6>{getPatientCode(patient)}</h6>
-            </div>
-          </div> */}
         </Row>
 
         <Row>
@@ -350,8 +344,7 @@ const VisitForm = (props: Props) => {
                         labTest={labTest}
                         onDelete={() => onRemoveLabTest(index)}
                         onSave={(newLabTest: Partial<LabTest>) =>
-                          onLabTestsChange(index, newLabTest)
-                        }
+                          onLabTestsChange(index, newLabTest)}
                       />
                     ))}
                     <Button color="outline-primary" onClick={onAddLabTest}>
@@ -370,7 +363,8 @@ const VisitForm = (props: Props) => {
                         imagingTest={imagingTest}
                         onDelete={() => onRemoveImagingTest(index)}
                         onSave={(newImagingTest: Partial<ImagingTest>) =>
-                          onImagingTestsChange(index, newImagingTest)}
+                          onImagingTestsChange(index, newImagingTest)
+                        }
                       />
                     ))}
                     <Button color="outline-primary" onClick={onAddImagingTest}>

@@ -78,9 +78,5 @@ export default function validateCarePlan(carePlan: Partial<CarePlan>): CarePlanE
     }
   }
 
-  // if (!carePlan.diagnosisId) {
-  //   error.condition = 'patient.carePlan.error.conditionRequired'
-  // }
-
   return error
 }

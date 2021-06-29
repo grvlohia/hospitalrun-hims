@@ -5,7 +5,6 @@ import { Route, Switch } from 'react-router-dom'
 
 import Administration from './administration/Administration'
 import Dashboard from './dashboard/Dashboard'
-// import Dashboard from './dashboard/Dashboard'
 import Imagings from './imagings/Imagings'
 import Incidents from './incidents/Incidents'
 import Labs from './labs/Labs'
