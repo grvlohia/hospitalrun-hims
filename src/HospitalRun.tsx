@@ -3,6 +3,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
 
+import Administration from './administration/Administration'
 import Dashboard from './dashboard/Dashboard'
 // import Dashboard from './dashboard/Dashboard'
 import Imagings from './imagings/Imagings'
@@ -23,7 +24,6 @@ import Sidebar from './shared/components/Sidebar'
 import ModulePermissions from './shared/model/ModulePermissions'
 import { RootState } from './shared/store'
 import LoginPage from './user/view/LoginPage'
-import Administration from './userManagement/Administration'
 
 const HospitalRun = () => {
   const { title } = useTitle()

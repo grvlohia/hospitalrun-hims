@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable camelcase */
-import { CouchConstants } from '@innohealthtech/common-constants'
+// import { CouchConstants } from '@innohealthtech/common-constants'
 import PouchDB from 'pouchdb'
 import PouchAuth from 'pouchdb-authentication'
 import PouchdbFind from 'pouchdb-find'
@@ -55,6 +55,10 @@ export const schema = [
     plural: 'medications',
     relations: { patient: { belongsTo: 'patient' } },
   },
+  {
+    singular: 'staff',
+    plural: 'staffs',
+  },
 ]
 
 class DbService {
@@ -88,13 +92,17 @@ class DbService {
 
     const userDb = `userdb-${Buffer.from(username, 'utf-8').toString('hex')}`
 
-    this.serverDb = new PouchDB(`${CouchConstants.url()}/${userDb}`, {
-      skip_setup: true,
-      auth: {
-        username,
-        password,
+    this.serverDb = new PouchDB(
+      // `${CouchConstants.SCHEME}://${CouchConstants.HOST}:${CouchConstants.PORT}/${userDb}`,
+      `${process.env.REACT_APP_COUCHDB}/${userDb}`,
+      {
+        skip_setup: true,
+        auth: {
+          username,
+          password,
+        },
       },
-    })
+    )
   }
 
   public startSyncing() {
@@ -126,64 +134,3 @@ class DbService {
 }
 
 export default new DbService()
-
-// let serverDb
-// let localDb
-
-// if (process.env.NODE_ENV === 'test') {
-//   serverDb = new PouchDB('hospitalrun', { skip_setup: true, adapter: 'memory' })
-//   localDb = new PouchDB('local_hospitalrun', { skip_setup: true, adapter: 'memory' })
-// } else {
-//   serverDb = new PouchDB(
-//     `${process.env.REACT_APP_REMOTE_COUCHDB}/${process.env.REACT_APP_TENANT_DB}`,
-//     {
-//       skip_setup: true,
-//     },
-//   )
-
-//   localDb = new PouchDB('local_hospitalrun', { skip_setup: true })
-//   localDb.sync(serverDb, { live: true, retry: true })
-// }
-
-// export const schema = [
-//   {
-//     singular: 'patient',
-//     plural: 'patients',
-//     relations: {
-//       appointments: {
-//         hasMany: { type: 'appointment', options: { queryInverse: 'patient', async: true } },
-//       },
-//       labs: { hasMany: { type: 'lab', options: { queryInverse: 'patient', async: true } } },
-//       medications: {
-//         hasMany: { type: 'medication', options: { queryInverse: 'patient', async: true } },
-//       },
-//       imagings: { hasMany: { type: 'imaging', options: { queryInverse: 'patient', async: true } } },
-//     },
-//   },
-//   {
-//     singular: 'appointment',
-//     plural: 'appointments',
-//     relations: { patient: { belongsTo: 'patient' } },
-//   },
-//   {
-//     singular: 'incident',
-//     plural: 'incidents',
-//   },
-//   {
-//     singular: 'lab',
-//     plural: 'labs',
-//     relations: { patient: { belongsTo: 'patient' } },
-//   },
-//   {
-//     singular: 'imaging',
-//     plural: 'imagings',
-//     relations: { patient: { belongsTo: 'patient' } },
-//   },
-//   {
-//     singular: 'medication',
-//     plural: 'medications',
-//     relations: { patient: { belongsTo: 'patient' } },
-//   },
-// ]
-// export const relationalDb = localDb.setSchema(schema)
-// export const remoteDb = serverDb as PouchDB.Database

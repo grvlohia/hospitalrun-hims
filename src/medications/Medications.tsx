@@ -36,7 +36,6 @@ const Medications = () => {
       />
       <PrivateRoute
         isAuthenticated={permissions.includes(Permissions.ViewMedication)}
-        exact
         path="/medications/:id"
         component={ViewMedication}
       />

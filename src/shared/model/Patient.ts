@@ -15,12 +15,12 @@ interface History {
 }
 
 export default interface Patient extends AbstractDBModel, Name, ContactInformation {
-  code: string // unique patient code for internal use
-  type?: string // regular or covered under a program like ayushman
+  code: string
+  type?: string
   sex: string
   dateOfBirth: string
-  isApproximateDateOfBirth: boolean // used if patient doesn't know (or does not want to provide) his age
-  index: string // used for pouchdb views
+  isApproximateDateOfBirth: boolean
+  index: string
   preferredLanguage?: string
   occupation?: string
   relatedPersons?: RelatedPerson[]
