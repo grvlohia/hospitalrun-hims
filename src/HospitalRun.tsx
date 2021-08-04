@@ -1,4 +1,5 @@
 import { Toaster } from '@hospitalrun/components'
+import { Constants } from '@innohealthtech/common-constants'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
@@ -20,7 +21,6 @@ import Navbar from './shared/components/navbar/Navbar'
 import { NetworkStatusMessage } from './shared/components/network-status'
 import PrivateRoute from './shared/components/PrivateRoute'
 import Sidebar from './shared/components/Sidebar'
-import ModulePermissions from './shared/model/ModulePermissions'
 import { RootState } from './shared/store'
 import LoginPage from './user/view/LoginPage'
 
@@ -58,27 +58,27 @@ const HospitalRun = () => {
                   <Route path="/settings" component={Settings} />
                   <Route path="/login" component={LoginPage} />
                   <PrivateRoute
-                    isAuthenticated={enabledModules.includes(ModulePermissions.Registration)}
+                    isAuthenticated={enabledModules.includes(Constants.MODULES.REGISTRATION)}
                     path="/appointments"
                     component={Appointments}
                   />
                   <PrivateRoute
-                    isAuthenticated={enabledModules.includes('patient')}
+                    isAuthenticated={enabledModules.includes(Constants.MODULES.PATIENT)}
                     path="/patients"
                     component={Patients}
                   />
                   <PrivateRoute
-                    isAuthenticated={enabledModules.includes(ModulePermissions.LabManagement)}
+                    isAuthenticated={enabledModules.includes(Constants.MODULES.LAB)}
                     path="/labs"
                     component={Labs}
                   />
                   <PrivateRoute
-                    isAuthenticated={enabledModules.includes(ModulePermissions.LabManagement)}
+                    isAuthenticated={enabledModules.includes(Constants.MODULES.LAB)}
                     path="/imaging"
                     component={Imagings}
                   />
                   <PrivateRoute
-                    isAuthenticated={enabledModules.includes(ModulePermissions.UserManagement)}
+                    isAuthenticated={enabledModules.includes(Constants.MODULES.ADMIN)}
                     path="/administration"
                     component={Administration}
                   />

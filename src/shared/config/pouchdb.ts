@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable camelcase */
 // import { CouchConstants } from '@innohealthtech/common-constants'
+import { CouchConstants } from '@innohealthtech/common-constants'
 import PouchDB from 'pouchdb'
 import PouchAuth from 'pouchdb-authentication'
 import PouchdbFind from 'pouchdb-find'
@@ -68,13 +69,10 @@ class DbService {
 
   replicationObj: PouchDB.Replication.Sync<any> | null
 
-  localDbRecreated: boolean
-
   constructor() {
     this.localDb = new PouchDB('local_innohims').setSchema(schema)
     this.serverDb = null
     this.replicationObj = null
-    this.localDbRecreated = false
   }
 
   public teardownServerDb() {
@@ -92,17 +90,15 @@ class DbService {
 
     const userDb = `userdb-${Buffer.from(username, 'utf-8').toString('hex')}`
 
-    this.serverDb = new PouchDB(
-      // `${CouchConstants.SCHEME}://${CouchConstants.HOST}:${CouchConstants.PORT}/${userDb}`,
-      `${process.env.REACT_APP_COUCHDB}/${userDb}`,
-      {
-        skip_setup: true,
-        auth: {
-          username,
-          password,
-        },
+    const dbUrl = `${CouchConstants.url()}/${userDb}`
+    // const dbUrl = `http://admin:password@localhost:5800/${userDb}`
+    this.serverDb = new PouchDB(dbUrl, {
+      skip_setup: true,
+      auth: {
+        username,
+        password,
       },
-    )
+    })
   }
 
   public startSyncing() {
@@ -129,7 +125,6 @@ class DbService {
   public async recreateLocalDb() {
     await this.localDb.destroy()
     this.localDb = new PouchDB('local_innohims').setSchema(schema)
-    this.localDbRecreated = true
   }
 }
 

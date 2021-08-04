@@ -91,6 +91,7 @@ const userSlice = createSlice({
     logoutSuccess(state) {
       state.user = undefined
       state.permissions = []
+      state.modules = []
     },
   },
 })

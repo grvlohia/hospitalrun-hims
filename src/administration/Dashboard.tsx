@@ -29,14 +29,9 @@ const Dashboard = () => {
   }
   const features: Feature[] = [
     {
-      icon: 'patient-add',
-      title: 'Create New Staff',
-      path: '/administration/addStaff',
-    },
-    {
-      icon: 'edit',
-      title: 'Edit Staff Member',
-      path: '/administration/editStaff',
+      icon: 'patients',
+      title: 'Staff Members',
+      path: '/administration/staff',
     },
   ]
 

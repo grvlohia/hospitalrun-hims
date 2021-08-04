@@ -1,5 +1,8 @@
+import escapeStringRegexp from 'escape-string-regexp'
+
 import DbService from '../config/pouchdb'
 import Staff from '../model/Staff'
+import generateCode from '../util/generateCode'
 import Repository from './Repository'
 
 class StaffRepository extends Repository<Staff> {
@@ -9,14 +12,19 @@ class StaffRepository extends Repository<Staff> {
 
   async search(text: string): Promise<Staff[]> {
     super.refreshRelationalDb()
+    const escapedString = escapeStringRegexp(text)
     return super.search({
       selector: {
         $or: [
           {
-            'data.loginName': text,
+            'data.loginName': {
+              $regex: RegExp(escapedString, 'i'),
+            },
           },
           {
-            'data.primaryEmail': text,
+            'data.primaryEmail': {
+              $regex: RegExp(escapedString, 'i'),
+            },
           },
         ],
       },
@@ -25,9 +33,14 @@ class StaffRepository extends Repository<Staff> {
 
   async save(entity: Staff): Promise<Staff> {
     super.refreshRelationalDb()
+    entity.metadata = {
+      docType: 'staff',
+    }
+    const staffCode = generateCode('S')
+    entity.code = staffCode
     const saveResult = await super.save(entity)
     return this.find(saveResult.id)
   }
 }
 
-export default StaffRepository
+export default new StaffRepository()

@@ -12,6 +12,7 @@ import patients from './patients'
 import scheduling from './scheduling'
 import settings from './settings'
 import sex from './sex'
+import staff from './staff'
 import states from './states'
 import user from './user'
 
@@ -32,4 +33,5 @@ export default {
   ...bloodType,
   ...imagings,
   ...administration,
+  ...staff,
 }

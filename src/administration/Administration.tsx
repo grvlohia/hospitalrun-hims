@@ -2,9 +2,10 @@ import React from 'react'
 import { Switch } from 'react-router-dom'
 
 import PrivateRoute from '../shared/components/PrivateRoute'
-import AddStaff from './AddStaff'
 import Dashboard from './Dashboard'
-import EditStaff from './EditStaff'
+import AddStaff from './staff/AddStaff'
+import EditStaff from './staff/EditStaff'
+import ViewStaffs from './staff/search/ViewStaffs'
 
 const Administration = () => {
   const isAdmin = true
@@ -14,13 +15,18 @@ const Administration = () => {
       <PrivateRoute
         isAuthenticated={isAdmin}
         exact
-        path="/administration/addStaff"
-        component={AddStaff}
+        path="/administration/staff"
+        component={ViewStaffs}
       />
       <PrivateRoute
         isAuthenticated={isAdmin}
         exact
-        path="/administration/editStaff"
+        path="/administration/staff/new"
+        component={AddStaff}
+      />
+      <PrivateRoute
+        isAuthenticated={isAdmin}
+        path="/administration/staff/:id/edit"
         component={EditStaff}
       />
     </Switch>

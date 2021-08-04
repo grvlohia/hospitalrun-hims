@@ -1,8 +1,9 @@
 import { Alert, Button, Column, Container, Row, Toast } from '@hospitalrun/components'
-import React, { CSSProperties, useState } from 'react'
+import React, { CSSProperties, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
 
+import { useUpdateTitle } from '../../page-header/title/TitleContext'
 import TextInputWithLabelFormGroup from '../../shared/components/input/TextInputWithLabelFormGroup'
 import useTranslator from '../../shared/hooks/useTranslator'
 import { RootState } from '../../shared/store'
@@ -12,6 +13,12 @@ const LoginPage = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const { t } = useTranslator()
+  const updateTitle = useUpdateTitle()
+
+  useEffect(() => {
+    updateTitle('Login')
+  })
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const loginError = useSelector((state: RootState) => state.user.loginError)
@@ -26,14 +33,13 @@ const LoginPage = () => {
   }
 
   if (user) {
-    history.push('/')
     Toast('success', 'Logged In', `Successfully Logged In as ${username}`)
+    history.push('/')
   }
 
   return (
     <Container>
       <form>
-        <h1 style={{ textAlign: 'center' }}>Login</h1>
         <Row style={rowStyles}>
           <Column md={6}>
             {loginError ? <Alert color="danger" message={t(loginError.message)} /> : null}
