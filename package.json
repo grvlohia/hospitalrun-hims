@@ -3,6 +3,7 @@
   "version": "2.0.0-alpha.7",
   "description": "React frontend for Inno HIMS",
   "private": false,
+  "homepage": "https://grvlohia.github.io/hospitalrun-hims/",
   "dependencies": {
     "@hospitalrun/components": "~3.4.0",
     "@innohealthtech/common-constants": "~0.0.6",
@@ -97,6 +98,7 @@
     "eslint-plugin-prettier": "~3.3.0",
     "eslint-plugin-react": "~7.23.0",
     "eslint-plugin-react-hooks": "~4.1.0",
+    "gh-pages": "~3.2.3",
     "history": "4.10.1",
     "husky": "~5.2.0",
     "jest-canvas-mock": "~2.3.0",
@@ -128,7 +130,9 @@
     "remove-compiled-translations": "rimraf ./bin/scripts/check-translations",
     "pretranslation:check": "npm run remove-compiled-translations",
     "translation:check": "tsc -p scripts/tsconfig.json && node ./bin/scripts/check-translations/index.js",
-    "posttranslation:check": "npm run remove-compiled-translations"
+    "posttranslation:check": "npm run remove-compiled-translations",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "browserslist": {
     "production": [
